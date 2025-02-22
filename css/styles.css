@@ -1,3 +1,4 @@
+@import url('variables.css');
 @import url('layout.css');
 @import url('filters.css');
 @import url('cards.css');
@@ -7,9 +8,9 @@
 /* Общие стили */
 body {
     font-family: Arial, sans-serif;
-    background: #f8f8f8;
+    background: #686868;
     text-align: center;
-    padding: 20px;
+    margin: var(--spacing-xl) 0;
 }
 
 /* Тумблер */

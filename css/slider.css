@@ -39,24 +39,21 @@
 #population-slider {
     width: 100%;
     -webkit-appearance: none;
-    height: 6px;
-    border-radius: 5px;
-    background: linear-gradient(to right, #007bff 50%, #ddd 50%);
+    height: 3px;
     background-size: 100% 100%;
-    background-repeat: no-repeat;
-    transition: background 0.1s ease-in-out;
+    background: linear-gradient(to right, black 50%, #ddd 50%) no-repeat;
+    border-radius: 3px;
 }
 
 /* ✅ Стилизуем бегунок */
 #population-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: blue;
+    background: black;
     cursor: pointer;
     position: relative;
-    margin-top: -5px;
 }
 
 /* Инпут */

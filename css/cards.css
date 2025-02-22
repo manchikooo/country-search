@@ -1,49 +1,51 @@
 /* Сетка стран */
 .countries-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
+    margin: auto;
+    grid-template-columns: repeat(auto-fill, 345px);
+    gap: var(--spacing-l);
     justify-items: center;
-    /*padding: 10px;*/
-    /*width: 75%;*/
-    /*align-content: start;*/
+    justify-content: center;
 }
 
 /* Карточка страны */
 .card {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background: white;
-    padding: 32px;
+    border: 1px solid #d2d2d2;
+    border-radius: var(--spacing-m);
+    padding: var(--spacing-l);
     text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
+    transition: all 0.2s;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .card:hover {
-    transform: scale(1.05);
+    /*box-shadow: 5px 6px 7px rgba(0, 0, 0, 0.1);
+    парящий эффект конечно красиво но не по дизайну*/
+    border-color: #000;
 }
 
 .card img {
     width: 100%;
-    height: 100%;
-    max-height: 187px;
+    height: 187px;
     object-fit: cover;
-    border-radius: 10px;
-    border: 1px solid #EDEDED;
+    border-radius: var(--spacing-m);
 }
 
 .card button {
     margin-top: 10px;
-    padding: 8px 12px;
-    background: #007bff;
-    color: white;
+    width: 100%;
+    padding: var(--spacing-s) 0;
+    background: #EDEDED;
+    color: black;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    border-radius: var(--spacing-s);
+    transition: all 0.2s;
 }
 
 .card button:hover {
-    background: #0056b3;
+    background: black;
+    color: white;
 }
