@@ -1,0 +1,71 @@
+/* Контейнер фильтра */
+.slider-container {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Заголовок фильтра (название + стрелка) */
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 8px;
+}
+
+/* Иконка стрелки */
+.slider-icon {
+    transition: transform 0.3s ease;
+}
+
+/* При активном состоянии (разворачивается) */
+.slider-container.active .slider-icon {
+    transform: rotate(180deg);
+}
+
+/* Контент (ползунок + инпут) */
+.slider-content {
+    display: none;
+    padding: 10px 0;
+}
+
+/* Когда фильтр открыт */
+.slider-container.active .slider-content {
+    display: block;
+}
+
+/* Ползунок */
+#population-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 5px;
+    background: linear-gradient(to right, #007bff 50%, #ddd 50%);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    transition: background 0.1s ease-in-out;
+}
+
+/* ✅ Стилизуем бегунок */
+#population-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: blue;
+    cursor: pointer;
+    position: relative;
+    margin-top: -5px;
+}
+
+/* Инпут */
+#population-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 8px;
+}

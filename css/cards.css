@@ -1,0 +1,49 @@
+/* Сетка стран */
+.countries-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    justify-items: center;
+    /*padding: 10px;*/
+    /*width: 75%;*/
+    /*align-content: start;*/
+}
+
+/* Карточка страны */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    width: 100%;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    max-height: 187px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #EDEDED;
+}
+
+.card button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.card button:hover {
+    background: #0056b3;
+}

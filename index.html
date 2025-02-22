@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск по странам</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/reset.css">
+</head>
+<script src="js/slider.js"></script>
+<script src="js/range.js"></script>
+
+<body>
+<div class="container">
+    <!-- Фильтры -->
+    <aside class="filters">
+        <h3>Фильтры</h3>
+        <div class="slider-container active">
+            <div class="slider-header" onclick="toggleSlider(this)">
+                <span class="slider-title">Население</span>
+                <span class="slider-icon">▼</span> <!-- Иконка для сворачивания -->
+            </div>
+            <div class="slider-content">
+                <input type="range" id="population-slider" min="0" max="1000000000" step="1000000" value="500000000">
+                <input type="text" id="population-input" value="500 000 000">
+            </div>
+        </div>
+
+        <div class="range-container active">
+            <div class="range-header" onclick="toggleRange(this)">
+                <span class="range-title">Площадь (км²)</span>
+                <span class="range-icon">▼</span>
+            </div>
+            <div class="range-content">
+                <div class="range-inputs">
+                    <input type="text" id="area-min" placeholder="от 2,02">
+                    <input type="text" id="area-max" placeholder="до 17,1 млн">
+                </div>
+            </div>
+        </div>
+
+
+        <h4>Регион</h4>
+        <label><input type="checkbox"> Европа</label>
+        <label><input type="checkbox"> Азия</label>
+        <label><input type="checkbox"> Северная Америка</label>
+        <label><input type="checkbox"> Африка</label>
+        <label><input type="checkbox"> Антарктида</label>
+
+        <h4>Языки</h4>
+        <label><input type="checkbox"> Английский</label>
+        <label><input type="checkbox"> Французский</label>
+        <label><input type="checkbox"> Немецкий</label>
+
+        <h4>Членство в ООН</h4>
+        <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+        </label>
+    </aside>
+
+    <!-- Карточки стран -->
+    <main class="main-content">
+        <div class="countries-grid">
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+                <h3>Россия</h3>
+                <p>Регион: Европа, Азия</p>
+                <p>Столица: Москва</p>
+                <button>Подробнее</button>
+            </div>
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+                <h3>Россия</h3>
+                <p>Регион: Европа, Азия</p>
+                <p>Столица: Москва</p>
+                <button>Подробнее</button>
+            </div>
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+                <h3>Россия</h3>
+                <p>Регион: Европа, Азия</p>
+                <p>Столица: Москва</p>
+                <button>Подробнее</button>
+            </div>
+
+            <div class="card">
+                <img src="https://flagcdn.com/w320/br.png" alt="Флаг Бразилии">
+                <h3>Бразилия</h3>
+                <p>Регион: Южная Америка</p>
+                <p>Столица: Бразилиа</p>
+                <button>Подробнее</button>
+            </div>
+
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ar.png" alt="Флаг Аргентины">
+                <h3>Аргентина</h3>
+                <p>Регион: Южная Америка</p>
+                <p>Столица: Буэнос-Айрес</p>
+                <button>Подробнее</button>
+            </div>
+
+            <div class="card">
+                <img src="https://flagcdn.com/w320/hu.png" alt="Флаг Венгрии">
+                <h3>Венгрия</h3>
+                <p>Регион: Европа</p>
+                <p>Столица: Будапешт</p>
+                <button>Подробнее</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

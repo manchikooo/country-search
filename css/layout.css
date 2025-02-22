@@ -1,0 +1,13 @@
+/*  Основной контейнер */
+.container {
+    display: flex;
+    width: 80%;
+    height: calc(100vh - 40px);
+    margin: 0 auto;
+}
+
+/* Основной контент */
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+}

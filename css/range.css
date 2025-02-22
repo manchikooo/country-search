@@ -1,0 +1,57 @@
+/* Основной контейнер */
+.range-container {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Заголовок фильтра */
+.range-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 8px;
+}
+
+/* Иконка стрелки */
+.range-icon {
+    transition: transform 0.3s ease;
+    /*pointer-events: none;*/
+}
+
+/* Когда фильтр открыт */
+.range-container.active .range-icon {
+    transform: rotate(180deg);
+}
+
+/* Контейнер для инпутов */
+.range-inputs {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* Инпуты */
+.range-inputs input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    color: #888;
+}
+
+/* Скрываем контент, если фильтр свернут */
+.range-content {
+    display: none;
+    padding: 10px 0;
+}
+
+/* Когда фильтр открыт */
+.range-container.active .range-content {
+    display: block;
+}
