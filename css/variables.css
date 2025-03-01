@@ -9,4 +9,18 @@
     --spacing-l: 2rem;
     --spacing-xl: 3rem;
     --spacing-xxl: 4rem;
+
+    --border-radius: 0.625rem;
+    --border-radius-l: 1.5rem;
+
+    --color-lightgrey: #ededed;
+    --color-grey: #d2d2d2;
+    --color-active: #000;
+    --color-bg: #fff;
+
+    --border: 1px solid var(--color-grey);
+    --border-hover: 1px solid var(--color-active);
+
+
+    --transition: all 0.2s;
 }

@@ -4,11 +4,17 @@
 @import url('cards.css');
 @import url('slider.css');
 @import url('range.css');
+@import url('defaults.css');
+
+:root {
+    /* позволяет включить анимацию в хроме для высоты и ширины с авто значениями */
+    interpolate-size: allow-keywords;
+}
 
 /* Общие стили */
 body {
     font-family: Arial, sans-serif;
-    background: #686868;
+    background: var(--color-bg);
     text-align: center;
     margin: var(--spacing-xl) 0;
 }
@@ -19,12 +25,10 @@ body {
     display: inline-block;
     width: 34px;
     height: 20px;
-}
 
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+    input {
+        display: none;
+    }
 }
 
 .slider {
@@ -34,25 +38,25 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 34px;
-}
+    background-color: var(--color-grey);
+    transition: var(--transition);
+    border-radius: var(--border-radius-l);
 
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 14px;
-    width: 14px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
+    &:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background-color: var(--color-bg);
+        transition: var(--transition);
+        border-radius: 50%;
+    }
 }
 
 input:checked + .slider {
-    background-color: #007bff;
+    background-color: var(--color-active);
 }
 
 input:checked + .slider:before {

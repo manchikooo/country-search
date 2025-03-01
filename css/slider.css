@@ -5,14 +5,7 @@
 }
 
 /* Заголовок фильтра (название + стрелка) */
-.slider-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    font-weight: bold;
-    padding: 8px;
-}
+
 
 /* Иконка стрелки */
 .slider-icon {
@@ -54,15 +47,4 @@
     background: black;
     cursor: pointer;
     position: relative;
-}
-
-/* Инпут */
-#population-input {
-    width: 100%;
-    padding: 8px;
-    font-size: 16px;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-top: 8px;
 }

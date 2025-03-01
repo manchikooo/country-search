@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Функция для сворачивания/разворачивания фильтра
-function toggleSlider(element) {
+function toggleSingleFilter(element) {
     const sliderContainer = element.parentElement;
     sliderContainer.classList.toggle("active");
 }
