@@ -69,6 +69,189 @@ paths:
                   items:
                     $ref: '#/components/schemas/Country'
 
+  /api/countries:
+    get:
+      summary: Получить все страны (динамический эндпоинт)
+      description: Возвращает список всех стран с кэшированием
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Country'
+        '503':
+          description: Сервис временно недоступен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Сервис временно недоступен. Загрузка данных...'
+
+  /api/countries/search:
+    get:
+      summary: Поиск стран по различным параметрам
+      description: Позволяет искать страны по различным критериям с пагинацией
+      parameters:
+        - name: name
+          in: query
+          description: Поиск по названию страны
+          schema:
+            type: string
+        - name: population
+          in: query
+          description: Поиск по населению (±10%)
+          schema:
+            type: number
+        - name: areaFrom
+          in: query
+          description: Минимальная площадь
+          schema:
+            type: number
+        - name: areaTo
+          in: query
+          description: Максимальная площадь
+          schema:
+            type: number
+        - name: regions
+          in: query
+          description: Фильтр по регионам (через запятую)
+          schema:
+            type: string
+        - name: continents
+          in: query
+          description: Фильтр по континентам (через запятую)
+          schema:
+            type: string
+        - name: languages
+          in: query
+          description: Фильтр по языкам (через запятую)
+          schema:
+            type: string
+        - name: currencies
+          in: query
+          description: Фильтр по валютам (через запятую)
+          schema:
+            type: string
+        - name: independent
+          in: query
+          description: Фильтр по статусу независимости
+          schema:
+            type: boolean
+        - name: timezones
+          in: query
+          description: Фильтр по часовым поясам (через запятую)
+          schema:
+            type: string
+        - name: unMember
+          in: query
+          description: Фильтр по членству в ООН
+          schema:
+            type: boolean
+        - name: landlocked
+          in: query
+          description: Фильтр по отсутствию выхода к морю
+          schema:
+            type: boolean
+        - name: page
+          in: query
+          description: Номер страницы
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Количество результатов на странице
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: Общее количество найденных стран
+                  page:
+                    type: integer
+                    description: Текущая страница
+                  limit:
+                    type: integer
+                    description: Количество результатов на странице
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Country'
+        '400':
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '503':
+          description: Сервис временно недоступен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /api/countries/{code}:
+    get:
+      summary: Получить страну по коду
+      description: Возвращает информацию о стране по её коду (2 или 3 символа)
+      parameters:
+        - name: code
+          in: path
+          required: true
+          description: Код страны (2 или 3 символа)
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 3
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Country'
+        '400':
+          description: Некорректный код страны
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Некорректный код страны'
+        '404':
+          description: Страна не найдена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Страна не найдена'
+
 components:
   schemas:
     Country:
