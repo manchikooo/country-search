@@ -21,13 +21,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: "npm"
-        cache-dependency-path: server/package.json  # добавлен путь к package.json
+        cache-dependency-path: server/package.json
     
-    # остальные шаги остаются без изменений
     - name: Install dependencies
       run: |
         cd server
-        npm ci
+        npm install
     
     - name: Run tests
       run: |
