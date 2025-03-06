@@ -53,12 +53,12 @@ const readme = `# Country Search API
 
 \`\`\`javascript
 // Получить все страны
-fetch('https://[your-username].github.io/country-search/all-countries.json')
+fetch('https://manchikooo.github.io/country-search/all-countries.json')
   .then(response => response.json())
   .then(data => console.log(data));
 
 // Получить страны по региону
-fetch('https://[your-username].github.io/country-search/countries-by-region.json')
+fetch('https://manchikooo.github.io/country-search/countries-by-region.json')
   .then(response => response.json())
   .then(data => console.log(data['Europe']));
 \`\`\`
