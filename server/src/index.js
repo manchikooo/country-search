@@ -4,12 +4,16 @@ const path = require('path');
 const fs = require('fs').promises;
 const rateLimit = require('express-rate-limit');
 const NodeCache = require('node-cache');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const CACHE_TTL = 60 * 60; // 1 час
 const cache = new NodeCache({ stdTTL: CACHE_TTL });
+
+const swaggerDocument = YAML.load(path.join(__dirname, 'swagger.yaml'));
 
 // Настройка rate limiting
 const limiter = rateLimit({
@@ -258,6 +262,9 @@ app.get('/api/countries/:code', checkDataLoaded, (req, res) => {
     
     res.json(country);
 });
+
+// Добавляем до остальных роутов
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Обработка ошибок
 app.use((err, req, res, next) => {

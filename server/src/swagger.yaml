@@ -96,81 +96,112 @@ paths:
   /api/countries/search:
     get:
       summary: Поиск стран по различным параметрам
-      description: Позволяет искать страны по различным критериям с пагинацией
+      description: |
+        Позволяет искать страны по различным критериям с пагинацией.
+        Все параметры опциональны и могут комбинироваться друг с другом.
       parameters:
         - name: name
           in: query
-          description: Поиск по названию страны
+          description: Поиск по названию страны (частичное совпадение, регистронезависимый)
           schema:
             type: string
+          example: "Russia"
         - name: population
           in: query
-          description: Поиск по населению (±10%)
+          description: Поиск по населению (±10% от указанного значения)
           schema:
-            type: number
+            type: integer
+          example: 144100000
         - name: areaFrom
           in: query
-          description: Минимальная площадь
+          description: Минимальная площадь страны в квадратных километрах
           schema:
             type: number
+          example: 1000000
         - name: areaTo
           in: query
-          description: Максимальная площадь
+          description: Максимальная площадь страны в квадратных километрах
           schema:
             type: number
+          example: 2000000
         - name: regions
           in: query
-          description: Фильтр по регионам (через запятую)
+          description: |
+            Фильтр по регионам (через запятую)
+            Доступные значения: Europe, Asia, Africa, Oceania, Americas, Antarctic
           schema:
             type: string
+          example: "Europe,Asia"
         - name: continents
           in: query
-          description: Фильтр по континентам (через запятую)
+          description: |
+            Фильтр по континентам (через запятую)
+            Доступные значения: Europe, Asia, Africa, Oceania, North America, South America, Antarctica
           schema:
             type: string
+          example: "Europe,Asia"
         - name: languages
           in: query
-          description: Фильтр по языкам (через запятую)
+          description: |
+            Фильтр по кодам языков (через запятую)
+            Примеры кодов: eng (English), rus (Russian), fra (French)
           schema:
             type: string
+          example: "rus,eng"
         - name: currencies
           in: query
-          description: Фильтр по валютам (через запятую)
+          description: |
+            Фильтр по кодам валют (через запятую)
+            Примеры кодов: USD, EUR, RUB
           schema:
             type: string
+          example: "RUB,USD"
         - name: independent
           in: query
-          description: Фильтр по статусу независимости
-          schema:
-            type: boolean
-        - name: timezones
-          in: query
-          description: Фильтр по часовым поясам (через запятую)
+          description: Фильтр по статусу независимости (true/false)
           schema:
             type: string
+            enum: ["true", "false"]
+          example: "true"
+        - name: timezones
+          in: query
+          description: |
+            Фильтр по часовым поясам (через запятую)
+            Формат: UTC±XX:XX
+          schema:
+            type: string
+          example: "UTC+03:00,UTC+04:00"
         - name: unMember
           in: query
-          description: Фильтр по членству в ООН
+          description: Фильтр по членству в ООН (true/false)
           schema:
-            type: boolean
+            type: string
+            enum: ["true", "false"]
+          example: "true"
         - name: landlocked
           in: query
-          description: Фильтр по отсутствию выхода к морю
+          description: Фильтр по отсутствию выхода к морю (true/false)
           schema:
-            type: boolean
+            type: string
+            enum: ["true", "false"]
+          example: "false"
         - name: page
           in: query
-          description: Номер страницы
+          description: Номер страницы (начиная с 1)
           schema:
             type: integer
+            minimum: 1
             default: 1
+          example: 1
         - name: limit
           in: query
-          description: Количество результатов на странице
+          description: Количество результатов на странице (максимум 100)
           schema:
             type: integer
-            default: 20
+            minimum: 1
             maximum: 100
+            default: 20
+          example: 20
       responses:
         '200':
           description: Успешный ответ
@@ -182,16 +213,33 @@ paths:
                   total:
                     type: integer
                     description: Общее количество найденных стран
+                    example: 250
                   page:
                     type: integer
                     description: Текущая страница
+                    example: 1
                   limit:
                     type: integer
                     description: Количество результатов на странице
+                    example: 20
                   data:
                     type: array
                     items:
                       $ref: '#/components/schemas/Country'
+              example:
+                total: 250
+                page: 1
+                limit: 20
+                data:
+                  - name:
+                      common: Russia
+                      official: Russian Federation
+                    cca2: RU
+                    cca3: RUS
+                    population: 144104080
+                    region: Europe
+                    languages:
+                      rus: Russian
         '400':
           description: Некорректные параметры запроса
           content:
@@ -201,6 +249,8 @@ paths:
                 properties:
                   message:
                     type: string
+                example:
+                  message: "Некорректное значение населения"
         '503':
           description: Сервис временно недоступен
           content:
@@ -210,6 +260,8 @@ paths:
                 properties:
                   message:
                     type: string
+                example:
+                  message: "Сервис временно недоступен. Загрузка данных..."
 
   /api/countries/{code}:
     get:
