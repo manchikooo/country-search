@@ -70,3 +70,29 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./server/public
+
+      - name: Create deployment summary
+        run: |
+          echo "# 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📍 Deployment URLs" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📚 Documentation" >> $GITHUB_STEP_SUMMARY
+          echo "- [API Documentation](https://manchikooo.github.io/country-search/README.md)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🌍 API Endpoints" >> $GITHUB_STEP_SUMMARY
+          echo "- [All Countries](https://manchikooo.github.io/country-search/all-countries.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- [Countries by Population](https://manchikooo.github.io/country-search/countries-by-population.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- [Countries by Region](https://manchikooo.github.io/country-search/countries-by-region.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- [Countries by Language](https://manchikooo.github.io/country-search/countries-by-language.json)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Display deployment URL
+        run: |
+          echo "🚀 Deployed successfully!"
+          echo "📊 API is available at: https://manchikooo.github.io/country-search/"
+          echo "📝 Documentation: https://manchikooo.github.io/country-search/README.md"
+          echo "🌍 Example endpoints:"
+          echo "  - All countries: https://manchikooo.github.io/country-search/all-countries.json"
+          echo "  - By population: https://manchikooo.github.io/country-search/countries-by-population.json"
+          echo "  - By region: https://manchikooo.github.io/country-search/countries-by-region.json"
+          echo "  - By language: https://manchikooo.github.io/country-search/countries-by-language.json"
