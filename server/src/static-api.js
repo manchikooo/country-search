@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const yaml = require('js-yaml');
 
 // Читаем данные
 const data = JSON.parse(fs.readFileSync(path.join(__dirname, '../../mockData.json'), 'utf8'));
@@ -42,6 +43,11 @@ const readme = `# Country Search API
 
 Это статическая версия API для поиска информации о странах.
 
+## Документация
+
+Интерактивная документация API доступна по адресу:
+[https://manchikooo.github.io/country-search/](https://manchikooo.github.io/country-search/)
+
 ## Доступные эндпоинты
 
 1. \`/all-countries.json\` - все страны
@@ -67,3 +73,40 @@ fetch('https://manchikooo.github.io/country-search/countries-by-region.json')
 fs.writeFileSync(path.join(publicDir, 'README.md'), readme);
 
 console.log('Статические файлы API успешно созданы!'); 
+
+fs.copyFileSync(
+    path.join(__dirname, 'swagger.yaml'),
+    path.join(publicDir, 'swagger.yaml')
+);
+
+const swaggerHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Country Search API Documentation" />
+    <title>Country Search API - Documentation</title>
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" crossorigin></script>
+    <script>
+        window.onload = () => {
+            window.ui = SwaggerUIBundle({
+                url: 'swagger.yaml',
+                dom_id: '#swagger-ui',
+                deepLinking: true,
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIBundle.SwaggerUIStandalonePreset
+                ],
+            });
+        };
+    </script>
+</body>
+</html>
+`;
+
+fs.writeFileSync(path.join(publicDir, 'index.html'), swaggerHtml);

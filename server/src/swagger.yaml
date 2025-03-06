@@ -1,0 +1,150 @@
+openapi: 3.0.0
+info:
+  title: Country Search API
+  description: API для поиска информации о странах
+  version: 1.0.0
+
+servers:
+  - url: https://manchikooo.github.io/country-search
+    description: GitHub Pages Static API
+
+paths:
+  /all-countries.json:
+    get:
+      summary: Получить список всех стран
+      description: Возвращает полный список всех стран с их данными
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Country'
+
+  /countries-by-population.json:
+    get:
+      summary: Получить страны, отсортированные по населению
+      description: Возвращает список стран, отсортированный по убыванию населения
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Country'
+
+  /countries-by-region.json:
+    get:
+      summary: Получить страны, сгруппированные по регионам
+      description: Возвращает страны, сгруппированные по их географическим регионам
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Country'
+
+  /countries-by-language.json:
+    get:
+      summary: Получить страны, сгруппированные по языкам
+      description: Возвращает страны, сгруппированные по используемым в них языкам
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Country'
+
+components:
+  schemas:
+    Country:
+      type: object
+      properties:
+        name:
+          type: object
+          properties:
+            common:
+              type: string
+              example: "Russia"
+            official:
+              type: string
+              example: "Russian Federation"
+        cca2:
+          type: string
+          example: "RU"
+        cca3:
+          type: string
+          example: "RUS"
+        population:
+          type: integer
+          example: 144104080
+        region:
+          type: string
+          example: "Europe"
+        subregion:
+          type: string
+          example: "Eastern Europe"
+        languages:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            rus: "Russian"
+        currencies:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              name:
+                type: string
+              symbol:
+                type: string
+          example:
+            RUB:
+              name: "Russian ruble"
+              symbol: "₽"
+        capital:
+          type: array
+          items:
+            type: string
+          example: ["Moscow"]
+        area:
+          type: number
+          example: 17098246
+        timezones:
+          type: array
+          items:
+            type: string
+          example: ["UTC+03:00"]
+        continents:
+          type: array
+          items:
+            type: string
+          example: ["Europe", "Asia"]
+        flags:
+          type: object
+          properties:
+            png:
+              type: string
+            svg:
+              type: string
+        independent:
+          type: boolean
+        unMember:
+          type: boolean
+        landlocked:
+          type: boolean
