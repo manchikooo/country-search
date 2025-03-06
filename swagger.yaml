@@ -1,12 +1,18 @@
 openapi: 3.0.0
 info:
   title: Country Search API
-  description: API для поиска информации о странах
+  description: |
+    API для поиска информации о странах.
+    
+    ВАЖНО: На GitHub Pages доступны только статические JSON файлы.
+    Динамические эндпоинты (/api/*) требуют развертывания на сервере с поддержкой Node.js.
   version: 1.0.0
 
 servers:
   - url: https://manchikooo.github.io/country-search
-    description: GitHub Pages Static API
+    description: GitHub Pages Static API (только статические JSON файлы)
+  - url: http://localhost:3001
+    description: Local Development Server (все эндпоинты)
 
 paths:
   /all-countries.json:
