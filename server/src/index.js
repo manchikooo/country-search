@@ -60,14 +60,12 @@ async function loadData() {
 
         countries = parsedData;
         isDataLoaded = true;
+        return true; // добавляем возврат для подтверждения успешной загрузки
     } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
-        process.exit(1); // Завершаем процесс, так как без данных сервер не может работать
+        throw error; // пробрасываем ошибку вместо process.exit(1)
     }
 }
-
-// Загрузка данных при запуске сервера
-loadData();
 
 // Middleware для проверки загрузки данных
 const checkDataLoaded = (req, res, next) => {
@@ -281,12 +279,15 @@ process.on('SIGINT', () => {
 // Экспортируем приложение для тестов
 module.exports = {
     app,
+    loadData,
     isDataLoaded
 };
 
-// Запускаем сервер только если файл запущен напрямую
+// Запускаем сервер и загружаем данные только если файл запущен напрямую
 if (require.main === module) {
+    loadData().catch(() => process.exit(1));
+    
     app.listen(PORT, () => {
         console.log(`Сервер запущен на порту ${PORT}`);
     });
-} 
+}
