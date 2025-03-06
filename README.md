@@ -2,6 +2,11 @@
 
 Это статическая версия API для поиска информации о странах.
 
+## Документация
+
+Интерактивная документация API доступна по адресу:
+[https://manchikooo.github.io/country-search/](https://manchikooo.github.io/country-search/)
+
 ## Доступные эндпоинты
 
 1. `/all-countries.json` - все страны
