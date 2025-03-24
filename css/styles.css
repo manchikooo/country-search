@@ -3,13 +3,18 @@
 @import url('cards.css');
 @import url('slider.css');
 @import url('range.css');
+@import url('search.css');
 
-/* Общие стили */
-body {
+html, body {
     font-family: Arial, sans-serif;
     background: #f8f8f8;
-    text-align: center;
-    padding: 20px;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+body {
+    padding: 48px 20px;
 }
 
 /* Тумблер */

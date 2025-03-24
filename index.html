@@ -11,7 +11,7 @@
 <script src="js/range.js"></script>
 
 <body>
-<div class="container">
+    <div class="container">
     <!-- Фильтры -->
     <aside class="filters">
         <h3>Фильтры</h3>
@@ -61,7 +61,37 @@
 
     <!-- Карточки стран -->
     <main class="main-content">
+        <div class="search-wrapper">
+            <label for="search" class="searchLabel"></label>
+            <input
+                type="text"
+                id="search"
+                placeholder="Поиск"
+                class="search-input"
+            />
+        </div>
         <div class="countries-grid">
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+                <h3>Россия</h3>
+                <p>Регион: Европа, Азия</p>
+                <p>Столица: Москва</p>
+                <button>Подробнее</button>
+            </div>
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+                <h3>Россия</h3>
+                <p>Регион: Европа, Азия</p>
+                <p>Столица: Москва</p>
+                <button>Подробнее</button>
+            </div>
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+                <h3>Россия</h3>
+                <p>Регион: Европа, Азия</p>
+                <p>Столица: Москва</p>
+                <button>Подробнее</button>
+            </div>
             <div class="card">
                 <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
                 <h3>Россия</h3>
@@ -109,7 +139,6 @@
             </div>
         </div>
     </main>
-</div>
-
+    </div>
 </body>
 </html>
