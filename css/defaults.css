@@ -1,0 +1,30 @@
+input {
+    width: 100%;
+    font-size: 16px;
+    border: var(--border);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+
+    &[type = "text"] {
+        padding: var(--spacing-s);
+    }
+
+    &:focus {
+        border: var(--border-hover);
+    }
+}
+
+button {
+    border-radius: var(--spacing-s);
+    border: none;
+    padding: var(--spacing-s);
+    width: 100%;
+    color: var(--color-active);
+    transition: var(--transition);
+    background: var(--color-lightgrey);
+
+    &:hover {
+        background: var(--color-active);
+        color: var(--color-bg);
+    }
+}

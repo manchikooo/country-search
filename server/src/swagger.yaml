@@ -1,0 +1,391 @@
+openapi: 3.0.0
+info:
+  title: Country Search API
+  description: |
+    API для поиска информации о странах.
+    
+    ВАЖНО: На GitHub Pages доступны только статические JSON файлы.
+    Динамические эндпоинты (/api/*) требуют развертывания на сервере с поддержкой Node.js.
+  version: 1.0.0
+
+servers:
+  - url: https://manchikooo.github.io/country-search
+    description: GitHub Pages Static API (только статические JSON файлы)
+  - url: http://localhost:3001
+    description: Local Development Server (все эндпоинты)
+
+paths:
+  /all-countries.json:
+    get:
+      summary: Получить список всех стран
+      description: Возвращает полный список всех стран с их данными
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Country'
+
+  /countries-by-population.json:
+    get:
+      summary: Получить страны, отсортированные по населению
+      description: Возвращает список стран, отсортированный по убыванию населения
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Country'
+
+  /countries-by-region.json:
+    get:
+      summary: Получить страны, сгруппированные по регионам
+      description: Возвращает страны, сгруппированные по их географическим регионам
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Country'
+
+  /countries-by-language.json:
+    get:
+      summary: Получить страны, сгруппированные по языкам
+      description: Возвращает страны, сгруппированные по используемым в них языкам
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Country'
+
+  /api/countries:
+    get:
+      summary: Получить все страны (динамический эндпоинт)
+      description: Возвращает список всех стран с кэшированием
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Country'
+        '503':
+          description: Сервис временно недоступен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Сервис временно недоступен. Загрузка данных...'
+
+  /api/countries/search:
+    get:
+      summary: Поиск стран по различным параметрам
+      description: |
+        Позволяет искать страны по различным критериям с пагинацией.
+        Все параметры опциональны и могут комбинироваться друг с другом.
+      parameters:
+        - name: name
+          in: query
+          description: Поиск по названию страны (частичное совпадение, регистронезависимый)
+          schema:
+            type: string
+          example: "Russia"
+        - name: population
+          in: query
+          description: Поиск по населению (±10% от указанного значения)
+          schema:
+            type: integer
+          example: 144100000
+        - name: areaFrom
+          in: query
+          description: Минимальная площадь страны в квадратных километрах
+          schema:
+            type: number
+          example: 1000000
+        - name: areaTo
+          in: query
+          description: Максимальная площадь страны в квадратных километрах
+          schema:
+            type: number
+          example: 2000000
+        - name: regions
+          in: query
+          description: |
+            Фильтр по регионам (через запятую)
+            Доступные значения: Europe, Asia, Africa, Oceania, Americas, Antarctic
+          schema:
+            type: string
+          example: "Europe,Asia"
+        - name: continents
+          in: query
+          description: |
+            Фильтр по континентам (через запятую)
+            Доступные значения: Europe, Asia, Africa, Oceania, North America, South America, Antarctica
+          schema:
+            type: string
+          example: "Europe,Asia"
+        - name: languages
+          in: query
+          description: |
+            Фильтр по кодам языков (через запятую)
+            Примеры кодов: eng (English), rus (Russian), fra (French)
+          schema:
+            type: string
+          example: "rus,eng"
+        - name: currencies
+          in: query
+          description: |
+            Фильтр по кодам валют (через запятую)
+            Примеры кодов: USD, EUR, RUB
+          schema:
+            type: string
+          example: "RUB,USD"
+        - name: independent
+          in: query
+          description: Фильтр по статусу независимости (true/false)
+          schema:
+            type: string
+            enum: ["true", "false"]
+          example: "true"
+        - name: timezones
+          in: query
+          description: |
+            Фильтр по часовым поясам (через запятую)
+            Формат: UTC±XX:XX
+          schema:
+            type: string
+          example: "UTC+03:00,UTC+04:00"
+        - name: unMember
+          in: query
+          description: Фильтр по членству в ООН (true/false)
+          schema:
+            type: string
+            enum: ["true", "false"]
+          example: "true"
+        - name: landlocked
+          in: query
+          description: Фильтр по отсутствию выхода к морю (true/false)
+          schema:
+            type: string
+            enum: ["true", "false"]
+          example: "false"
+        - name: page
+          in: query
+          description: Номер страницы (начиная с 1)
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: limit
+          in: query
+          description: Количество результатов на странице (максимум 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          example: 20
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: Общее количество найденных стран
+                    example: 250
+                  page:
+                    type: integer
+                    description: Текущая страница
+                    example: 1
+                  limit:
+                    type: integer
+                    description: Количество результатов на странице
+                    example: 20
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Country'
+              example:
+                total: 250
+                page: 1
+                limit: 20
+                data:
+                  - name:
+                      common: Russia
+                      official: Russian Federation
+                    cca2: RU
+                    cca3: RUS
+                    population: 144104080
+                    region: Europe
+                    languages:
+                      rus: Russian
+        '400':
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "Некорректное значение населения"
+        '503':
+          description: Сервис временно недоступен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "Сервис временно недоступен. Загрузка данных..."
+
+  /api/countries/{code}:
+    get:
+      summary: Получить страну по коду
+      description: Возвращает информацию о стране по её коду (2 или 3 символа)
+      parameters:
+        - name: code
+          in: path
+          required: true
+          description: Код страны (2 или 3 символа)
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 3
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Country'
+        '400':
+          description: Некорректный код страны
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Некорректный код страны'
+        '404':
+          description: Страна не найдена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Страна не найдена'
+
+components:
+  schemas:
+    Country:
+      type: object
+      properties:
+        name:
+          type: object
+          properties:
+            common:
+              type: string
+              example: "Russia"
+            official:
+              type: string
+              example: "Russian Federation"
+        cca2:
+          type: string
+          example: "RU"
+        cca3:
+          type: string
+          example: "RUS"
+        population:
+          type: integer
+          example: 144104080
+        region:
+          type: string
+          example: "Europe"
+        subregion:
+          type: string
+          example: "Eastern Europe"
+        languages:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            rus: "Russian"
+        currencies:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              name:
+                type: string
+              symbol:
+                type: string
+          example:
+            RUB:
+              name: "Russian ruble"
+              symbol: "₽"
+        capital:
+          type: array
+          items:
+            type: string
+          example: ["Moscow"]
+        area:
+          type: number
+          example: 17098246
+        timezones:
+          type: array
+          items:
+            type: string
+          example: ["UTC+03:00"]
+        continents:
+          type: array
+          items:
+            type: string
+          example: ["Europe", "Asia"]
+        flags:
+          type: object
+          properties:
+            png:
+              type: string
+            svg:
+              type: string
+        independent:
+          type: boolean
+        unMember:
+          type: boolean
+        landlocked:
+          type: boolean

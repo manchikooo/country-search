@@ -1,0 +1,98 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: "npm"
+        cache-dependency-path: server/package.json
+    
+    - name: Install dependencies
+      run: |
+        cd server
+        npm install
+    
+    - name: Run tests
+      run: |
+        cd server
+        npm test
+    
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: server/coverage
+        retention-days: 7
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: server/package.json
+          
+      - name: Install dependencies
+        run: |
+          cd server
+          npm install
+          
+      - name: Generate static files
+        run: |
+          cd server
+          npm run generate-static
+          
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./server/public
+
+      - name: Create deployment summary
+        run: |
+          echo "# 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📍 Deployment URLs" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📚 Documentation" >> $GITHUB_STEP_SUMMARY
+          echo "- [API Documentation](https://manchikooo.github.io/country-search/README.md)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🌍 API Endpoints" >> $GITHUB_STEP_SUMMARY
+          echo "- [All Countries](https://manchikooo.github.io/country-search/all-countries.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- [Countries by Population](https://manchikooo.github.io/country-search/countries-by-population.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- [Countries by Region](https://manchikooo.github.io/country-search/countries-by-region.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- [Countries by Language](https://manchikooo.github.io/country-search/countries-by-language.json)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Display deployment URL
+        run: |
+          echo "🚀 Deployed successfully!"
+          echo "📊 API is available at: https://manchikooo.github.io/country-search/"
+          echo "📝 Documentation: https://manchikooo.github.io/country-search/README.md"
+          echo "🌍 Example endpoints:"
+          echo "  - All countries: https://manchikooo.github.io/country-search/all-countries.json"
+          echo "  - By population: https://manchikooo.github.io/country-search/countries-by-population.json"
+          echo "  - By region: https://manchikooo.github.io/country-search/countries-by-region.json"
+          echo "  - By language: https://manchikooo.github.io/country-search/countries-by-language.json"

@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const value = slider.value;
 
         const percentage = ((value - min) / (max - min)) * 100;
-        slider.style.background = `linear-gradient(to right, #007bff ${percentage}%, #ddd ${percentage}%)`;
+        slider.style.background = `linear-gradient(to right, black ${percentage}%, #ddd ${percentage}%)`;
     }
 
     // Обновляем input и полосу при движении ползунка
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Функция для сворачивания/разворачивания фильтра
-function toggleSlider(element) {
+function toggleSingleFilter(element) {
     const sliderContainer = element.parentElement;
     sliderContainer.classList.toggle("active");
 }

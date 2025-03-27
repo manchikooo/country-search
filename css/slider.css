@@ -5,14 +5,7 @@
 }
 
 /* Заголовок фильтра (название + стрелка) */
-.slider-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    font-weight: bold;
-    padding: 8px;
-}
+
 
 /* Иконка стрелки */
 .slider-icon {
@@ -39,33 +32,19 @@
 #population-slider {
     width: 100%;
     -webkit-appearance: none;
-    height: 6px;
-    border-radius: 5px;
-    background: linear-gradient(to right, #007bff 50%, #ddd 50%);
+    height: 3px;
     background-size: 100% 100%;
-    background-repeat: no-repeat;
-    transition: background 0.1s ease-in-out;
+    background: linear-gradient(to right, black 50%, #ddd 50%) no-repeat;
+    border-radius: 3px;
 }
 
 /* ✅ Стилизуем бегунок */
 #population-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: blue;
+    background: black;
     cursor: pointer;
     position: relative;
-    margin-top: -5px;
-}
-
-/* Инпут */
-#population-input {
-    width: 100%;
-    padding: 8px;
-    font-size: 16px;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-top: 8px;
 }
