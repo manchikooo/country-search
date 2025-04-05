@@ -5,6 +5,10 @@
 
 /* Основной контент */
 .main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: relative;
     flex-grow: 1;
     margin-left: var(--spacing-l);
     margin-right: var(--spacing-l);

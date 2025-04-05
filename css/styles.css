@@ -16,7 +16,7 @@ body {
     font-family: Arial, sans-serif;
     background: var(--color-bg);
     text-align: center;
-    margin: var(--spacing-xl) 0;
+    margin: var(--spacing-xl);
 }
 
 /* Тумблер */

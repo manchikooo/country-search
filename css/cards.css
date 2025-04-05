@@ -1,6 +1,9 @@
 .countries-grid {
+    height: calc(100vh - 173px);
+    width: 100%;
+    overflow: auto;
     display: grid;
-    margin: auto;
+    margin: 0 auto;
     grid-template-columns: repeat(auto-fill, 345px);
     gap: var(--spacing-l);
     justify-items: center;

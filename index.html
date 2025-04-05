@@ -14,6 +14,7 @@
 <div class="container">
     <!-- Фильтры -->
     <aside class="filters">
+        <div class="filters_scroll-wrapper">
         <div class="filters_container active">
             <div class="filters_header" onclick="toggleSingleFilter(this)">
                 <span>Население</span>
@@ -21,7 +22,7 @@
             </div>
             <div class="filters_content">
                 <input type="range" id="population-slider" min="0" max="1000000000" step="1000000" value="500000000">
-                <input type="text" id="population-input" value="500 000 000">
+                <input class="population-input" type="text" id="population-input" value="500 000 000">
             </div>
         </div>
 
@@ -46,11 +47,11 @@
             </div>
             <div class="filters_content">
                 <div class="region-inputs">
-                    <label><input type="checkbox"> Европа</label>
-                    <label><input type="checkbox"> Азия</label>
-                    <label><input type="checkbox"> Северная Америка</label>
-                    <label><input type="checkbox"> Африка</label>
-                    <label><input type="checkbox"> Антарктида</label>
+                    <label class="custom-checkbox"><input type="checkbox"> Европа</label>
+                    <label class="custom-checkbox"><input type="checkbox"> Азия</label>
+                    <label class="custom-checkbox"><input type="checkbox"> Северная Америка</label>
+                    <label class="custom-checkbox"><input type="checkbox"> Африка</label>
+                    <label class="custom-checkbox"><input type="checkbox"> Антарктида</label>
                 </div>
             </div>
         </div>
@@ -106,15 +107,15 @@
                 </label>
             </div>
         </div>
-
+        </div>
     </aside>
 
     <!-- Карточки стран -->
     <main class="main-content">
+        <search>
+            <input type="text" name="titleSearch" id="titleSearch" placeholder="Поиск"/>
+        </search>
         <section class="countries-grid">
-            <search>
-                <input type="text" name="titleSearch" id="titleSearch" placeholder="Поиск"/>
-            </search>
             <div class="card">
                 <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
                 <h3>Россия</h3>
@@ -122,6 +123,55 @@
                 <p>Столица: Москва</p>
                 <button>Подробнее</button>
             </div>
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+                <h3>Россия</h3>
+                <p>Регион: Европа, Азия</p>
+                <p>Столица: Москва</p>
+                <button>Подробнее</button>
+            </div>
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+                <h3>Россия</h3>
+                <p>Регион: Европа, Азия</p>
+                <p>Столица: Москва</p>
+                <button>Подробнее</button>
+            </div><div class="card">
+            <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+            <h3>Россия</h3>
+            <p>Регион: Европа, Азия</p>
+            <p>Столица: Москва</p>
+            <button>Подробнее</button>
+            </div>
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+                <h3>Россия</h3>
+                <p>Регион: Европа, Азия</p>
+                <p>Столица: Москва</p>
+                <button>Подробнее</button>
+            </div>
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+                <h3>Россия</h3>
+                <p>Регион: Европа, Азия</p>
+                <p>Столица: Москва</p>
+                <button>Подробнее</button>
+            </div>
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+                <h3>Россия</h3>
+                <p>Регион: Европа, Азия</p>
+                <p>Столица: Москва</p>
+                <button>Подробнее</button>
+            </div>
+            <div class="card">
+                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
+                <h3>Россия</h3>
+                <p>Регион: Европа, Азия</p>
+                <p>Столица: Москва</p>
+                <button>Подробнее</button>
+            </div>
+
             <div class="card">
                 <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
                 <h3>Россия</h3>
