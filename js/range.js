@@ -1,10 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const rangeContainer = document.querySelector(".range-container");
-    const rangeContent = rangeContainer.querySelector(".range-content");
 
     // ✅ Открываем фильтр по умолчанию, но устанавливаем `data-open` для корректной работы toggle
     rangeContainer.classList.add("active");
-    rangeContent.style.display = "block";
     rangeContainer.setAttribute("data-open", "true");
 });
 
