@@ -7,9 +7,6 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<script src="js/slider.js"></script>
-<script src="js/range.js"></script>
-
 <body>
 <div class="container">
     <!-- Фильтры -->
@@ -47,11 +44,12 @@
             </div>
             <div class="filters_content">
                 <div class="region-inputs">
-                    <label class="custom-checkbox"><input type="checkbox"> Европа</label>
-                    <label class="custom-checkbox"><input type="checkbox"> Азия</label>
-                    <label class="custom-checkbox"><input type="checkbox"> Северная Америка</label>
-                    <label class="custom-checkbox"><input type="checkbox"> Африка</label>
-                    <label class="custom-checkbox"><input type="checkbox"> Антарктида</label>
+                    <label class="custom-checkbox"><input type="checkbox" data-region="europe"> Европа</label>
+                    <label class="custom-checkbox"><input type="checkbox" data-region="asia"> Азия</label>
+                    <label class="custom-checkbox"><input type="checkbox" data-region="europe"> Северная Америка</label>
+                    <label class="custom-checkbox"><input type="checkbox" data-region="europe"> Южная Америка</label>
+                    <label class="custom-checkbox"><input type="checkbox" data-region="africa"> Африка</label>
+                    <label class="custom-checkbox"><input type="checkbox" data-region="antarctic"> Антарктида</label>
                 </div>
             </div>
         </div>
@@ -80,10 +78,10 @@
             </div>
             <div class="filters_content">
                 <div class="language-inputs">
-                    <label><input type="checkbox"> Русский</label>
-                    <label><input type="checkbox"> Английский</label>
-                    <label><input type="checkbox"> Французский</label>
-                    <label><input type="checkbox"> Немецкий</label>
+                    <label><input type="checkbox" data-language="russian"> Русский</label>
+                    <label><input type="checkbox" data-language="english"> Английский</label>
+                    <label><input type="checkbox" data-language="french"> Французский</label>
+                    <label><input type="checkbox" data-language="german"> Немецкий</label>
                 </div>
             </div>
         </div>
@@ -116,103 +114,11 @@
             <input type="text" name="titleSearch" id="titleSearch" placeholder="Поиск"/>
         </search>
         <section class="countries-grid">
-            <div class="card">
-                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
-                <h3>Россия</h3>
-                <p>Регион: Европа, Азия</p>
-                <p>Столица: Москва</p>
-                <button>Подробнее</button>
-            </div>
-            <div class="card">
-                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
-                <h3>Россия</h3>
-                <p>Регион: Европа, Азия</p>
-                <p>Столица: Москва</p>
-                <button>Подробнее</button>
-            </div>
-            <div class="card">
-                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
-                <h3>Россия</h3>
-                <p>Регион: Европа, Азия</p>
-                <p>Столица: Москва</p>
-                <button>Подробнее</button>
-            </div><div class="card">
-            <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
-            <h3>Россия</h3>
-            <p>Регион: Европа, Азия</p>
-            <p>Столица: Москва</p>
-            <button>Подробнее</button>
-            </div>
-            <div class="card">
-                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
-                <h3>Россия</h3>
-                <p>Регион: Европа, Азия</p>
-                <p>Столица: Москва</p>
-                <button>Подробнее</button>
-            </div>
-            <div class="card">
-                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
-                <h3>Россия</h3>
-                <p>Регион: Европа, Азия</p>
-                <p>Столица: Москва</p>
-                <button>Подробнее</button>
-            </div>
-            <div class="card">
-                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
-                <h3>Россия</h3>
-                <p>Регион: Европа, Азия</p>
-                <p>Столица: Москва</p>
-                <button>Подробнее</button>
-            </div>
-            <div class="card">
-                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
-                <h3>Россия</h3>
-                <p>Регион: Европа, Азия</p>
-                <p>Столица: Москва</p>
-                <button>Подробнее</button>
-            </div>
-
-            <div class="card">
-                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
-                <h3>Россия</h3>
-                <p>Регион: Европа, Азия</p>
-                <p>Столица: Москва</p>
-                <button>Подробнее</button>
-            </div>
-            <div class="card">
-                <img src="https://flagcdn.com/w320/ru.png" alt="Флаг России">
-                <h3>Россия</h3>
-                <p>Регион: Европа, Азия</p>
-                <p>Столица: Москва</p>
-                <button>Подробнее</button>
-            </div>
-
-            <div class="card">
-                <img src="https://flagcdn.com/w320/br.png" alt="Флаг Бразилии">
-                <h3>Бразилия</h3>
-                <p>Регион: Южная Америка</p>
-                <p>Столица: Бразилиа</p>
-                <button>Подробнее</button>
-            </div>
-
-            <div class="card">
-                <img src="https://flagcdn.com/w320/ar.png" alt="Флаг Аргентины">
-                <h3>Аргентина</h3>
-                <p>Регион: Южная Америка</p>
-                <p>Столица: Буэнос-Айрес</p>
-                <button>Подробнее</button>
-            </div>
-
-            <div class="card">
-                <img src="https://flagcdn.com/w320/hu.png" alt="Флаг Венгрии">
-                <h3>Венгрия</h3>
-                <p>Регион: Европа</p>
-                <p>Столица: Будапешт</p>
-                <button>Подробнее</button>
-            </div>
         </section>
     </main>
 </div>
-
+<script src="js/slider.js"></script>
+<script src="js/range.js"></script>
+<script src="js/renderCountries.js"></script>
 </body>
 </html>
