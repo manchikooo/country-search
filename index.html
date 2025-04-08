@@ -18,7 +18,7 @@
                 <img src="public/icons/chevron.svg" class="filters_chevron-icon" alt="slider-icon"/>
             </div>
             <div class="filters_content">
-                <input type="range" id="population-slider" min="0" max="1000000000" step="1000000" value="500000000">
+                <input type="range" id="population-slider" min="0" max="1000000000" step="1000000" value="1000000000">
                 <input class="population-input" type="text" id="population-input" value="500 000 000">
             </div>
         </div>
@@ -45,10 +45,10 @@
             <div class="filters_content">
                 <div class="region-inputs">
                     <label class="custom-checkbox">
-                        <input type="checkbox" data-region="europe"> Европа
+                        <input type="checkbox" data-region="Europe"> Европа
                     </label>
                     <label class="custom-checkbox">
-                        <input type="checkbox" data-region="asia"> Азия
+                        <input type="checkbox" data-region="Asia"> Азия
                     </label>
                     <label class="custom-checkbox">
                         <input type="checkbox" data-region="americas"> Северная Америка
@@ -73,12 +73,18 @@
             </div>
             <div class="filters_content">
                 <div class="continent-inputs">
-                    <label class="custom-checkbox"><input type="checkbox"> Евразия</label>
-                    <label class="custom-checkbox"><input type="checkbox"> Африка</label>
-                    <label class="custom-checkbox"><input type="checkbox"> Северная Америка</label>
-                    <label class="custom-checkbox"><input type="checkbox"> Южная Америка</label>
-                    <label class="custom-checkbox"><input type="checkbox"> Австралия</label>
-                    <label class="custom-checkbox"><input type="checkbox"> Антарктида</label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" data-continent="Europe"> Евразия</label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" data-continent="Africa"> Африка</label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" data-continent="North America"> Северная Америка</label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" data-continent="South America"> Южная Америка</label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" data-continent="Oceania"> Австралия</label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" data-continent="Antarctica"> Антарктида</label>
                 </div>
             </div>
         </div>
