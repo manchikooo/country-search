@@ -27,7 +27,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     //присваиваем значение ответа в текущие страны
     currentCountries = await countries.json();
     filtersFromBackend = await filters.json();
-        console.log({filtersFromBackend})
 
     loadAvailableFilters(filtersFromBackend)
 
@@ -84,12 +83,10 @@ function renderCheckboxesWithLabels(containerSelector, valuesObj, dataAttr) {
 
     const entries = Object.entries(valuesObj); // [['english', 'Английский'], ...]
 
-    container.innerHTML = entries.map(([key, label]) => {
-        // console.log({key})
-        return `<label class="custom-checkbox">
+    container.innerHTML = entries.map(([key, label]) => `<label class="custom-checkbox">
             <input type="checkbox" data-${dataAttr}="${key}"> ${label}
         </label>
-    `}).join("");
+    `).join("");
 }
 
 function renderCountries() {
@@ -121,7 +118,6 @@ function renderCountries() {
 }
 
 async function applyFilters() {
-    console.log({appliedFiltersState});
     try {
         const url = buildQueryUrl(`${BASE_URL}/api/countries/search`, appliedFiltersState);
         const res = await fetch(url);
