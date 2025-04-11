@@ -20,17 +20,18 @@ let currentCountries = [];
 const BASE_URL = 'https://country-search-itbali-itbalis-projects.vercel.app'
 
 document.addEventListener("DOMContentLoaded", async () => {
-    // запрашиваем все страны
+    // запрашиваем страны и фильтры
     const countries = await fetch(`${BASE_URL}/api/countries`);
     const filters = await fetch(`${BASE_URL}/api/filters`);
 
-    //присваиваем значение ответа в текущие страны
+    //присваиваем значение ответов в переменные
     currentCountries = await countries.json();
     filtersFromBackend = await filters.json();
 
+    // передаем полученные фильтры в функцию для рендера чекбоксов
     loadAvailableFilters(filtersFromBackend)
 
-    // отрисовываем страны
+    // рендерим страны
     renderCountries();
 
     //устанавливаем фильтры
@@ -49,6 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupSingleCheckboxFilter(".independent-checkbox", "independent");
 });
 
+// функция для постройки урла для запроса с применением фильтров
 function buildQueryUrl(baseUrl, filters) {
     const url = new URL(baseUrl);
 
@@ -70,6 +72,7 @@ function buildQueryUrl(baseUrl, filters) {
     return url.toString();
 }
 
+// функция сбора чекбоксов с вариантами
 function loadAvailableFilters(filtersFromBack) {
     renderCheckboxesWithLabels(".region-inputs", filtersFromBack.regions.values, "region");
     renderCheckboxesWithLabels(".language-inputs", filtersFromBack.languages.values, "lang");
@@ -79,6 +82,7 @@ function loadAvailableFilters(filtersFromBack) {
     renderCheckboxesWithLabels(".independent-inputs", filtersFromBack.independent.values, "independent");
 }
 
+// непосредственно сама функция рендера чекбоксов с вариантами
 function renderCheckboxesWithLabels(containerSelector, valuesObj, dataAttr) {
     const container = document.querySelector(containerSelector);
     if (!container) return;
@@ -92,6 +96,7 @@ function renderCheckboxesWithLabels(containerSelector, valuesObj, dataAttr) {
     `).join("");
 }
 
+// функция рендера стран
 function renderCountries() {
     const container = document.querySelector(".countries-grid");
     container.innerHTML = "";
@@ -120,6 +125,7 @@ function renderCountries() {
     });
 }
 
+// функция применения фильтров
 async function applyFilters() {
     try {
         const url = buildQueryUrl(`${BASE_URL}/api/countries/search`, appliedFiltersState);
@@ -135,6 +141,7 @@ async function applyFilters() {
     }
 }
 
+// функция для установки фильтра по названию страны
 function setupNameFilter() {
     const input = document.getElementById("titleSearch");
     let debounceTimer = null;
@@ -148,6 +155,7 @@ function setupNameFilter() {
     });
 }
 
+// функция применения фильтра по количеству населения
 function setupPopulationFilter() {
     const slider = document.getElementById("population-slider");
     const input = document.getElementById("population-input");
@@ -166,6 +174,7 @@ function setupPopulationFilter() {
     input.addEventListener("input", e => update(e.target.value.replace(/\D/g, "")));
 }
 
+// функция установки фильтра по площади страны (от и до)
 function setupAreaFilter() {
     const minInput = document.getElementById("area-min");
     const maxInput = document.getElementById("area-max");
@@ -186,6 +195,7 @@ function setupAreaFilter() {
     maxInput.addEventListener("input", update);
 }
 
+// функция для установки фильтров при клике на чекбоксы (языки, регионы и тд)
 function setupCheckboxFilter(containerSelector, filterKey, datasetKey) {
     const checkboxes = document.querySelectorAll(`${containerSelector} input[type="checkbox"]`);
 
@@ -199,6 +209,7 @@ function setupCheckboxFilter(containerSelector, filterKey, datasetKey) {
     });
 }
 
+// функция для установки фильтров по переключалке (членство в ООН, выход к морю, независимость)
 function setupSingleCheckboxFilter(selector, filterKey) {
     const checkbox = document.querySelector(selector);
     if (!checkbox) return;
