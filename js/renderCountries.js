@@ -53,30 +53,30 @@ function buildQueryUrl(baseUrl, filters) {
     const url = new URL(baseUrl);
 
     if (filters.name) url.searchParams.set("name", filters.name);
-    if (filters.population) url.searchParams.set("population", filters.population);
-    if (filters.areaFrom) url.searchParams.set("areaFrom", filters.areaFrom);
     if (filters.areaTo) url.searchParams.set("areaTo", filters.areaTo);
+    if (filters.areaFrom) url.searchParams.set("areaFrom", filters.areaFrom);
+    if (filters.population) url.searchParams.set("population", filters.population);
 
     if (filters.regions.length) url.searchParams.set("regions", filters.regions.join(","));
     if (filters.languages.length) url.searchParams.set("languages", filters.languages.join(","));
+    if (filters.timezones.length) url.searchParams.set("timezones", filters.timezones.join(","));
     if (filters.continents.length) url.searchParams.set("continents", filters.continents.join(","));
     if (filters.currencies.length) url.searchParams.set("currencies", filters.currencies.join(","));
-    if (filters.timezones.length) url.searchParams.set("timezones", filters.timezones.join(","));
 
     if (filters.unMember !== null) url.searchParams.set("unMember", filters.unMember);
-    if (filters.independent !== null) url.searchParams.set("independent", filters.independent);
     if (filters.landlocked !== null) url.searchParams.set("landlocked", filters.landlocked);
+    if (filters.independent !== null) url.searchParams.set("independent", filters.independent);
 
     return url.toString();
 }
 
 function loadAvailableFilters(filtersFromBack) {
     renderCheckboxesWithLabels(".region-inputs", filtersFromBack.regions.values, "region");
-    renderCheckboxesWithLabels(".independent-inputs", filtersFromBack.independent.values, "independent");
-    renderCheckboxesWithLabels(".continent-inputs", filtersFromBack.continents.values, "continent");
     renderCheckboxesWithLabels(".language-inputs", filtersFromBack.languages.values, "lang");
-    renderCheckboxesWithLabels(".currency-inputs", filtersFromBack.currencies.values, "currency");
     renderCheckboxesWithLabels(".timezone-inputs", filtersFromBack.timezones.values, "timezone");
+    renderCheckboxesWithLabels(".currency-inputs", filtersFromBack.currencies.values, "currency");
+    renderCheckboxesWithLabels(".continent-inputs", filtersFromBack.continents.values, "continent");
+    renderCheckboxesWithLabels(".independent-inputs", filtersFromBack.independent.values, "independent");
 }
 
 function renderCheckboxesWithLabels(containerSelector, valuesObj, dataAttr) {
@@ -85,7 +85,8 @@ function renderCheckboxesWithLabels(containerSelector, valuesObj, dataAttr) {
 
     const entries = Object.entries(valuesObj); // [['english', 'Английский'], ...]
 
-    container.innerHTML = entries.map(([key, label]) => `<label class="custom-checkbox">
+    container.innerHTML = entries.map(([key, label]) =>
+        `<label class="custom-checkbox">
             <input type="checkbox" data-${dataAttr}="${key}"> ${label}
         </label>
     `).join("");
@@ -147,28 +148,6 @@ function setupNameFilter() {
     });
 }
 
-function setupCheckboxFilter(containerSelector, filterKey, datasetKey) {
-    const checkboxes = document.querySelectorAll(`${containerSelector} input[type="checkbox"]`);
-    checkboxes.forEach(cb => {
-        cb.addEventListener("change", () => {
-            appliedFiltersState[filterKey] = Array.from(checkboxes)
-                .filter(c => c.checked)
-                .map(c => c.dataset[datasetKey]);
-            applyFilters();
-        });
-    });
-}
-
-function setupSingleCheckboxFilter(selector, filterKey) {
-    const checkbox = document.querySelector(selector);
-    if (!checkbox) return;
-
-    checkbox.addEventListener("change", () => {
-        appliedFiltersState[filterKey] = checkbox.checked ? "true" : null;
-        applyFilters();
-    });
-}
-
 function setupPopulationFilter() {
     const slider = document.getElementById("population-slider");
     const input = document.getElementById("population-input");
@@ -205,4 +184,27 @@ function setupAreaFilter() {
 
     minInput.addEventListener("input", update);
     maxInput.addEventListener("input", update);
+}
+
+function setupCheckboxFilter(containerSelector, filterKey, datasetKey) {
+    const checkboxes = document.querySelectorAll(`${containerSelector} input[type="checkbox"]`);
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener("change", () => {
+            appliedFiltersState[filterKey] = Array.from(checkboxes)
+                .filter(c => c.checked)
+                .map(c => c.dataset[datasetKey]);
+            applyFilters();
+        });
+    });
+}
+
+function setupSingleCheckboxFilter(selector, filterKey) {
+    const checkbox = document.querySelector(selector);
+    if (!checkbox) return;
+
+    checkbox.addEventListener("change", () => {
+        appliedFiltersState[filterKey] = checkbox.checked ? "true" : null;
+        applyFilters();
+    });
 }
