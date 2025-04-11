@@ -1,4 +1,4 @@
-const filtersState = {
+let appliedFiltersState = {
     name: "",
     languages: [],
     regions: [],
@@ -13,16 +13,24 @@ const filtersState = {
     landlocked: null,
 };
 
+let filtersFromBackend = []
+
 let currentCountries = [];
 
 const BASE_URL = 'https://country-search-itbali-itbalis-projects.vercel.app'
 
 document.addEventListener("DOMContentLoaded", async () => {
     // запрашиваем все страны
-    const response = await fetch(`${BASE_URL}/api/countries`);
+    const countries = await fetch(`${BASE_URL}/api/countries`);
+    const filters = await fetch(`${BASE_URL}/api/filters`);
+
     //присваиваем значение ответа в текущие страны
-    currentCountries = await response.json();
-    console.log(currentCountries)
+    currentCountries = await countries.json();
+    filtersFromBackend = await filters.json();
+        console.log({filtersFromBackend})
+
+    loadAvailableFilters(filtersFromBackend)
+
     // отрисовываем страны
     renderCountries();
 
@@ -31,6 +39,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupLanguageFilter();
     setupRegionFilter();
     setupContinentFilter();
+    setupCurrencyFilter();
+    setupTimezonesFilter();
+    setupIndependentFilter();
     setupPopulationFilter();
     setupAreaFilter();
     setupUnMemberFilter();
@@ -56,6 +67,29 @@ function buildQueryUrl(baseUrl, filters) {
     if (filters.landlocked !== null) url.searchParams.set("landlocked", filters.landlocked);
 
     return url.toString();
+}
+
+function loadAvailableFilters(filtersFromBack) {
+    renderCheckboxesWithLabels(".region-inputs", filtersFromBack.regions.values, "region");
+    renderCheckboxesWithLabels(".independent-inputs", filtersFromBack.independent.values, "independent");
+    renderCheckboxesWithLabels(".continent-inputs", filtersFromBack.continents.values, "continent");
+    renderCheckboxesWithLabels(".language-inputs", filtersFromBack.languages.values, "lang");
+    renderCheckboxesWithLabels(".currency-inputs", filtersFromBack.currencies.values, "currency");
+    renderCheckboxesWithLabels(".timezone-inputs", filtersFromBack.timezones.values, "timezone");
+}
+
+function renderCheckboxesWithLabels(containerSelector, valuesObj, dataAttr) {
+    const container = document.querySelector(containerSelector);
+    if (!container) return;
+
+    const entries = Object.entries(valuesObj); // [['english', 'Английский'], ...]
+
+    container.innerHTML = entries.map(([key, label]) => {
+        // console.log({key})
+        return `<label class="custom-checkbox">
+            <input type="checkbox" data-${dataAttr}="${key}"> ${label}
+        </label>
+    `}).join("");
 }
 
 function renderCountries() {
@@ -86,46 +120,10 @@ function renderCountries() {
     });
 }
 
-// 👇 Универсальный запуск фильтрации
-// async function applyFilters() {
-//     try {
-//         const queries = [];
-//
-//         if (filtersState.name) {
-//             queries.push(fetch(`${BASE_URL}/api/countries/search`, {}).then(r => r.ok ? r.json() : []));
-//         }
-//
-//         for (const lang of filtersState.languages) {
-//             queries.push(fetch(`https://restcountries.com/v3.1/lang/${lang}`).then(r => r.ok ? r.json() : []));
-//         }
-//
-//         for (const region of filtersState.regions) {
-//             queries.push(fetch(`https://restcountries.com/v3.1/region/${region}`).then(r => r.ok ? r.json() : []));
-//         }
-//
-//         // Если ничего не выбрано — показать всё
-//         if (queries.length === 0) {
-//             const res = await fetch("https://restcountries.com/v3.1/all");
-//             currentCountries = await res.json();
-//             renderCountries();
-//             return;
-//         }
-//
-//         const results = await Promise.all(queries);
-//         const unique = intersectCountries(results);
-//         currentCountries = unique;
-//         console.log("Отфильтровано стран:", unique.length);
-//
-//         renderCountries();
-//     } catch (error) {
-//         console.error("Ошибка при применении фильтров:", error);
-//         renderCountries([]);
-//     }
-// }
-
 async function applyFilters() {
+    console.log({appliedFiltersState});
     try {
-        const url = buildQueryUrl(`${BASE_URL}/api/countries/search`, filtersState);
+        const url = buildQueryUrl(`${BASE_URL}/api/countries/search`, appliedFiltersState);
         const res = await fetch(url);
         const resResult = res.ok ? await res.json() : [];
 
@@ -148,7 +146,7 @@ function setupNameFilter() {
         // чистим старый таймаут
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
-            filtersState.name = input.value.trim();
+            appliedFiltersState.name = input.value.trim();
             applyFilters();
         }, 400);
     });
@@ -162,7 +160,7 @@ function setupLanguageFilter() {
     checkboxes.forEach(cb => {
         cb.addEventListener("change", () => {
             // добавляем на кжадый чекбокс слушатель и выбираем значение языка
-            filtersState.languages = Array.from(checkboxes)
+            appliedFiltersState.languages = Array.from(checkboxes)
                 .filter(c => c.checked)
                 .map(c => c.dataset.lang);
             applyFilters();
@@ -170,14 +168,15 @@ function setupLanguageFilter() {
     });
 }
 
+
+
 function setupRegionFilter() {
     const checkboxes = document.querySelectorAll('.region-inputs input[type="checkbox"]');
-    console.log({checkboxes})
     checkboxes.forEach(cb => {
         cb.addEventListener("change", () => {
-            filtersState.regions = Array.from(checkboxes)
+            appliedFiltersState.regions = Array.from(checkboxes)
                 .filter(c => c.checked)
-                .map(c => c.dataset.region.toLowerCase());
+                .map(c => c.dataset.region);
             applyFilters();
         });
     });
@@ -187,9 +186,33 @@ function setupContinentFilter() {
     const checkboxes = document.querySelectorAll('.continent-inputs input[type="checkbox"]');
     checkboxes.forEach(cb => {
         cb.addEventListener("change", () => {
-            filtersState.continents = Array.from(checkboxes)
+            appliedFiltersState.continents = Array.from(checkboxes)
                 .filter(c => c.checked)
                 .map(c => c.dataset.continent);
+            applyFilters();
+        });
+    });
+}
+
+function setupCurrencyFilter() {
+    const checkboxes = document.querySelectorAll('.currency-inputs input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+        cb.addEventListener("change", () => {
+            appliedFiltersState.currencies = Array.from(checkboxes)
+                .filter(c => c.checked)
+                .map(c => c.dataset.currency);
+            applyFilters();
+        });
+    });
+}
+
+function setupTimezonesFilter() {
+    const checkboxes = document.querySelectorAll('.timezone-inputs input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+        cb.addEventListener("change", () => {
+            appliedFiltersState.timezones = Array.from(checkboxes)
+                .filter(c => c.checked)
+                .map(c => c.dataset.timezone);
             applyFilters();
         });
     });
@@ -201,7 +224,7 @@ function setupPopulationFilter() {
     let debounceTimer = null;
 
     const update = value => {
-        filtersState.population = +value;
+        appliedFiltersState.population = +value;
         input.value = Number(value).toLocaleString("ru-RU");
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
@@ -218,12 +241,13 @@ function setupAreaFilter() {
     const maxInput = document.getElementById("area-max");
     let debounceTimer = null;
 
-    const parse = str => parseFloat(str.replace(/\s|млн|\,/g, "")) || null;
+    const parse = str => parseFloat(str.replace(/\s|млн|/g, "")) || null;
 
     const update = () => {
-        filtersState.areaFrom = parse(minInput.value);
-        filtersState.areaTo = parse(maxInput.value);
+        appliedFiltersState.areaFrom = parse(minInput.value);
+        appliedFiltersState.areaTo = parse(maxInput.value);
         clearTimeout(debounceTimer);
+
         debounceTimer = setTimeout(() => {
             applyFilters();
         }, 400);
@@ -234,17 +258,42 @@ function setupAreaFilter() {
 }
 
 function setupUnMemberFilter() {
-    const checkbox = document.querySelector(".filters_header input[type='checkbox']:not(:disabled):nth-of-type(1)");
+    const checkbox = document.querySelector(".unmember-checkbox");
+    if (!checkbox) return;
     checkbox.addEventListener("change", () => {
-        filtersState.unMember = checkbox.checked ? "true" : null;
+        appliedFiltersState.unMember = checkbox.checked ? "true" : null;
         applyFilters();
     });
 }
 
 function setupLandlockedFilter() {
-    const checkbox = document.querySelector(".filters_header input[type='checkbox']:not(:disabled):nth-of-type(2)");
+    const checkbox = document.querySelector(".landlocked-checkbox");
+    if (!checkbox) return;
+
     checkbox.addEventListener("change", () => {
-        filtersState.landlocked = checkbox.checked ? "true" : null;
+        appliedFiltersState.landlocked = checkbox.checked ? "true" : null;
         applyFilters();
     });
 }
+
+function setupIndependentFilter() {
+    const checkbox = document.querySelector(".independent-checkbox");
+    if (!checkbox) return;
+
+    checkbox.addEventListener("change", () => {
+        appliedFiltersState.independent = checkbox.checked ? "true" : null;
+        applyFilters();
+    });
+}
+
+// function setupIndependentFilter() {
+//     const checkboxes = document.querySelectorAll('.independent-inputs input[type="checkbox"]');
+//     checkboxes.forEach(cb => {
+//         cb.addEventListener("change", () => {
+//             appliedFiltersState.independent = Array.from(checkboxes)
+//                 .filter(c => c.checked)
+//                 .map(c => c.dataset.independent);
+//             applyFilters();
+//         });
+//     });
+// }
