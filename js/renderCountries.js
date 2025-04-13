@@ -74,16 +74,51 @@ function buildQueryUrl(baseUrl, filters) {
 
 // функция сбора чекбоксов с вариантами
 function loadAvailableFilters(filtersFromBack) {
-    renderCheckboxesWithLabels(".region-inputs", filtersFromBack.regions.values, "region");
-    renderCheckboxesWithLabels(".language-inputs", filtersFromBack.languages.values, "lang");
-    renderCheckboxesWithLabels(".timezone-inputs", filtersFromBack.timezones.values, "timezone");
-    renderCheckboxesWithLabels(".currency-inputs", filtersFromBack.currencies.values, "currency");
-    renderCheckboxesWithLabels(".continent-inputs", filtersFromBack.continents.values, "continent");
-    renderCheckboxesWithLabels(".independent-inputs", filtersFromBack.independent.values, "independent");
+    const filtersParameters = [
+        {
+            containerSelector: '.region-inputs',
+            valuesObj: filtersFromBack.regions.values,
+            dataAttr: 'region',
+        },
+        {
+            containerSelector: '.language-inputs',
+            valuesObj: filtersFromBack.languages.values,
+            dataAttr: 'lang',
+        },
+        {
+            containerSelector: '.timezone-inputs',
+            valuesObj: filtersFromBack.timezones.values,
+            dataAttr: 'timezone',
+        },
+        {
+            containerSelector: '.currency-inputs',
+            valuesObj: filtersFromBack.currencies.values,
+            dataAttr: 'currency',
+        },
+        {
+            containerSelector: '.continent-inputs',
+            valuesObj: filtersFromBack.continents.values,
+            dataAttr: 'continent',
+        },
+        {
+            containerSelector: '.independent-inputs',
+            valuesObj: filtersFromBack.independent.values,
+            dataAttr: 'independent',
+        },
+    ];
+
+    // проходимся по заготовленному массиву с параметрами фильтров и рендерим чекбоксы с вариантами
+    filtersParameters.forEach((param) => {
+        renderCheckboxesWithLabels({
+            containerSelector: param.containerSelector,
+            valuesObj: param.valuesObj,
+            dataAttr: param.dataAttr,
+        });
+    });
 }
 
 // непосредственно сама функция рендера чекбоксов с вариантами
-function renderCheckboxesWithLabels(containerSelector, valuesObj, dataAttr) {
+function renderCheckboxesWithLabels({containerSelector, valuesObj, dataAttr}) {
     const container = document.querySelector(containerSelector);
     if (!container) return;
 
