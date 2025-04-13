@@ -1,87 +1,137 @@
-const filtersState = {
+let appliedFiltersState = {
     name: "",
     languages: [],
-    regions: []
+    regions: [],
+    continents: [],
+    currencies: [],
+    timezones: [],
+    population: null,
+    areaFrom: null,
+    areaTo: null,
+    unMember: null,
+    independent: null,
+    landlocked: null,
 };
+
+let filtersFromBackend = []
 
 let currentCountries = [];
 
+const BASE_URL = 'https://country-search-itbali-itbalis-projects.vercel.app'
+
 document.addEventListener("DOMContentLoaded", async () => {
-    // запрашиваем все страны
-    const response = await fetch("https://restcountries.com/v3.1/all");
-    //присваиваем значение ответа в текущие страны
-    currentCountries = await response.json();
-    // отрисовываем страны
+    // запрашиваем страны и фильтры
+    const countries = await fetch(`${BASE_URL}/api/countries`);
+    const filters = await fetch(`${BASE_URL}/api/filters`);
+
+    //присваиваем значение ответов в переменные
+    currentCountries = await countries.json();
+    filtersFromBackend = await filters.json();
+
+    // передаем полученные фильтры в функцию для рендера чекбоксов
+    loadAvailableFilters(filtersFromBackend)
+
+    // рендерим страны
     renderCountries();
 
+    //устанавливаем фильтры
+    setupAreaFilter();
     setupNameFilter();
-    setupLanguageFilter();
-    setupRegionFilter();
+    setupPopulationFilter();
+
+    setupCheckboxFilter(".region-inputs", "regions", "region");
+    setupCheckboxFilter(".language-inputs", "languages", "lang");
+    setupCheckboxFilter(".timezone-inputs", "timezones", "timezone");
+    setupCheckboxFilter(".currency-inputs", "currencies", "currency");
+    setupCheckboxFilter(".continent-inputs", "continents", "continent");
+
+    setupSingleCheckboxFilter(".unmember-checkbox", "unMember");
+    setupSingleCheckboxFilter(".landlocked-checkbox", "landlocked");
+    setupSingleCheckboxFilter(".independent-checkbox", "independent");
 });
 
-// 👇 Универсальный запуск фильтрации
-async function applyFilters() {
-    try {
-        const queries = [];
+// функция для постройки урла для запроса с применением фильтров
+function buildQueryUrl(baseUrl, filters) {
+    const url = new URL(baseUrl);
 
-        if (filtersState.name) {
-            queries.push(fetch(`https://restcountries.com/v3.1/name/${encodeURIComponent(filtersState.name)}`).then(r => r.ok ? r.json() : []));
-        }
+    if (filters.name) url.searchParams.set("name", filters.name);
+    if (filters.areaTo) url.searchParams.set("areaTo", filters.areaTo);
+    if (filters.areaFrom) url.searchParams.set("areaFrom", filters.areaFrom);
+    if (filters.population) url.searchParams.set("population", filters.population);
 
-        for (const lang of filtersState.languages) {
-            queries.push(fetch(`https://restcountries.com/v3.1/lang/${lang}`).then(r => r.ok ? r.json() : []));
-        }
+    if (filters.regions.length) url.searchParams.set("regions", filters.regions.join(","));
+    if (filters.languages.length) url.searchParams.set("languages", filters.languages.join(","));
+    if (filters.timezones.length) url.searchParams.set("timezones", filters.timezones.join(","));
+    if (filters.continents.length) url.searchParams.set("continents", filters.continents.join(","));
+    if (filters.currencies.length) url.searchParams.set("currencies", filters.currencies.join(","));
 
-        for (const region of filtersState.regions) {
-            queries.push(fetch(`https://restcountries.com/v3.1/region/${region}`).then(r => r.ok ? r.json() : []));
-        }
+    if (filters.unMember !== null) url.searchParams.set("unMember", filters.unMember);
+    if (filters.landlocked !== null) url.searchParams.set("landlocked", filters.landlocked);
+    if (filters.independent !== null) url.searchParams.set("independent", filters.independent);
 
-        // Если ничего не выбрано — показать всё
-        if (queries.length === 0) {
-            const res = await fetch("https://restcountries.com/v3.1/all");
-            currentCountries = await res.json();
-            renderCountries();
-            return;
-        }
-
-        const results = await Promise.all(queries);
-        const unique = intersectCountries(results);
-        currentCountries = unique;
-        console.log("Отфильтровано стран:", unique.length);
-
-        renderCountries();
-    } catch (error) {
-        console.error("Ошибка при применении фильтров:", error);
-        renderCountries([]);
-    }
+    return url.toString();
 }
 
-// пересекающиеся страны
-function intersectCountries(countryLists) {
-    if (!countryLists.length) return [];
+// функция сбора чекбоксов с вариантами
+function loadAvailableFilters(filtersFromBack) {
+    const filtersParameters = [
+        {
+            containerSelector: '.region-inputs',
+            valuesObj: filtersFromBack.regions.values,
+            dataAttr: 'region',
+        },
+        {
+            containerSelector: '.language-inputs',
+            valuesObj: filtersFromBack.languages.values,
+            dataAttr: 'lang',
+        },
+        {
+            containerSelector: '.timezone-inputs',
+            valuesObj: filtersFromBack.timezones.values,
+            dataAttr: 'timezone',
+        },
+        {
+            containerSelector: '.currency-inputs',
+            valuesObj: filtersFromBack.currencies.values,
+            dataAttr: 'currency',
+        },
+        {
+            containerSelector: '.continent-inputs',
+            valuesObj: filtersFromBack.continents.values,
+            dataAttr: 'continent',
+        },
+        {
+            containerSelector: '.independent-inputs',
+            valuesObj: filtersFromBack.independent.values,
+            dataAttr: 'independent',
+        },
+    ];
 
-    const key = country => country.cca3 || country.name.common;
-
-    // массив массивов ключей
-    const keysOfTreeArrays = countryLists.map(list => {
-        return list.map(key)
+    // проходимся по заготовленному массиву с параметрами фильтров и рендерим чекбоксы с вариантами
+    filtersParameters.forEach((param) => {
+        renderCheckboxesWithLabels({
+            containerSelector: param.containerSelector,
+            valuesObj: param.valuesObj,
+            dataAttr: param.dataAttr,
+        });
     });
-
-    const firstList = countryLists[0];
-    const result = [];
-
-    firstList.forEach(country => {
-        const countryKey = key(country);
-
-        const inAll = keysOfTreeArrays.every(list => list.includes(countryKey));
-        if (inAll) {
-            result.push(country);
-        }
-    });
-
-    return result;
 }
 
+// непосредственно сама функция рендера чекбоксов с вариантами
+function renderCheckboxesWithLabels({containerSelector, valuesObj, dataAttr}) {
+    const container = document.querySelector(containerSelector);
+    if (!container) return;
+
+    const entries = Object.entries(valuesObj); // [['english', 'Английский'], ...]
+
+    container.innerHTML = entries.map(([key, label]) =>
+        `<label class="custom-checkbox">
+            <input type="checkbox" data-${dataAttr}="${key}"> ${label}
+        </label>
+    `).join("");
+}
+
+// функция рендера стран
 function renderCountries() {
     const container = document.querySelector(".countries-grid");
     container.innerHTML = "";
@@ -110,46 +160,97 @@ function renderCountries() {
     });
 }
 
-// функция поиска
+// функция применения фильтров
+async function applyFilters() {
+    try {
+        const url = buildQueryUrl(`${BASE_URL}/api/countries/search`, appliedFiltersState);
+        const res = await fetch(url);
+        const resResult = res.ok ? await res.json() : [];
+
+        currentCountries = resResult.data;
+
+        renderCountries();
+    } catch (error) {
+        console.error("Ошибка при фильтрации:", error);
+        renderCountries([]);
+    }
+}
+
+// функция для установки фильтра по названию страны
 function setupNameFilter() {
     const input = document.getElementById("titleSearch");
     let debounceTimer = null;
 
-    // слушатель на ипут поиска
     input.addEventListener("input", () => {
-        // чистим старый таймаут
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
-            filtersState.name = input.value.trim();
+            appliedFiltersState.name = input.value.trim();
             applyFilters();
         }, 400);
     });
 }
 
-// фильтр по языка
-function setupLanguageFilter() {
-    // собираем все чекбоксы
-    const checkboxes = document.querySelectorAll('.language-inputs input[type="checkbox"]');
-    // бежим по ним всем
+// функция применения фильтра по количеству населения
+function setupPopulationFilter() {
+    const slider = document.getElementById("population-slider");
+    const input = document.getElementById("population-input");
+    let debounceTimer = null;
+
+    const update = value => {
+        appliedFiltersState.population = +value;
+        input.value = Number(value).toLocaleString("ru-RU");
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            applyFilters();
+        }, 400);
+    };
+
+    slider.addEventListener("input", e => update(e.target.value));
+    input.addEventListener("input", e => update(e.target.value.replace(/\D/g, "")));
+}
+
+// функция установки фильтра по площади страны (от и до)
+function setupAreaFilter() {
+    const minInput = document.getElementById("area-min");
+    const maxInput = document.getElementById("area-max");
+    let debounceTimer = null;
+
+    const parse = str => parseFloat(str.replace(/\s|млн|,/g, "")) || null;
+
+    const update = () => {
+        appliedFiltersState.areaFrom = parse(minInput.value);
+        appliedFiltersState.areaTo = parse(maxInput.value);
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            applyFilters();
+        }, 400);
+    };
+
+    minInput.addEventListener("input", update);
+    maxInput.addEventListener("input", update);
+}
+
+// функция для установки фильтров при клике на чекбоксы (языки, регионы и тд)
+function setupCheckboxFilter(containerSelector, filterKey, datasetKey) {
+    const checkboxes = document.querySelectorAll(`${containerSelector} input[type="checkbox"]`);
+
     checkboxes.forEach(cb => {
         cb.addEventListener("change", () => {
-            // добавляем на кжадый чекбокс слушатель и выбираем значение языка
-            filtersState.languages = Array.from(checkboxes)
+            appliedFiltersState[filterKey] = Array.from(checkboxes)
                 .filter(c => c.checked)
-                .map(c => c.dataset.lang);
+                .map(c => c.dataset[datasetKey]);
             applyFilters();
         });
     });
 }
 
-function setupRegionFilter() {
-    const checkboxes = document.querySelectorAll('.region-inputs input[type="checkbox"]');
-    checkboxes.forEach(cb => {
-        cb.addEventListener("change", () => {
-            filtersState.regions = Array.from(checkboxes)
-                .filter(c => c.checked)
-                .map(c => c.dataset.region.toLowerCase());
-            applyFilters();
-        });
+// функция для установки фильтров по переключалке (членство в ООН, выход к морю, независимость)
+function setupSingleCheckboxFilter(selector, filterKey) {
+    const checkbox = document.querySelector(selector);
+    if (!checkbox) return;
+
+    checkbox.addEventListener("change", () => {
+        appliedFiltersState[filterKey] = checkbox.checked ? "true" : null;
+        applyFilters();
     });
 }
