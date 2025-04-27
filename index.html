@@ -12,18 +12,19 @@
     <!-- Фильтры -->
     <aside class="filters">
         <div class="filters_scroll-wrapper">
+
         <div class="filters_container active">
             <div class="filters_header" onclick="toggleSingleFilter(this)">
                 <span>Население</span>
                 <img src="public/icons/chevron.svg" class="filters_chevron-icon" alt="slider-icon"/>
             </div>
             <div class="filters_content">
-                <input type="range" id="population-slider" min="0" max="1000000000" step="1000000" value="500000000">
-                <input class="population-input" type="text" id="population-input" value="500 000 000">
+                <input type="range" id="population-slider" min="0" max="1000000000" step="1000000" value="1000000000">
+                <input class="population-input" type="text" id="population-input" value="1 000 000 000">
             </div>
         </div>
 
-        <div class="filters_container active">
+        <div class="filters_container ">
             <div class="filters_header" onclick="toggleSingleFilter(this)">
                 <span>Площадь (км²)</span>
                 <img src="public/icons/chevron.svg" class="filters_chevron-icon" alt="range-icon"/>
@@ -36,61 +37,71 @@
             </div>
         </div>
 
-
-        <div class="filters_container active">
+        <div class="filters_container ">
             <div class="filters_header" onclick="toggleSingleFilter(this)">
                 <span>Регион</span>
                 <img src="public/icons/chevron.svg" class="filters_chevron-icon" alt="region-icon"/>
             </div>
             <div class="filters_content">
-                <div class="region-inputs">
-                    <label class="custom-checkbox"><input type="checkbox" data-region="europe"> Европа</label>
-                    <label class="custom-checkbox"><input type="checkbox" data-region="asia"> Азия</label>
-                    <label class="custom-checkbox"><input type="checkbox" data-region="europe"> Северная Америка</label>
-                    <label class="custom-checkbox"><input type="checkbox" data-region="europe"> Южная Америка</label>
-                    <label class="custom-checkbox"><input type="checkbox" data-region="africa"> Африка</label>
-                    <label class="custom-checkbox"><input type="checkbox" data-region="antarctic"> Антарктида</label>
-                </div>
+                <div class="region-inputs"></div>
             </div>
         </div>
 
-        <div class="filters_container active">
+        <div class="filters_container ">
+            <div class="filters_header" onclick="toggleSingleFilter(this)">
+                <span>Часовой пояс</span>
+                <img src="public/icons/chevron.svg" class="filters_chevron-icon" alt="region-icon"/>
+            </div>
+            <div class="filters_content">
+                <div class="timezone-inputs"></div>
+            </div>
+        </div>
+
+        <div class="filters_container ">
+            <div class="filters_header" onclick="toggleSingleFilter(this)">
+                <span>Валюта</span>
+                <img src="public/icons/chevron.svg" class="filters_chevron-icon" alt="region-icon"/>
+            </div>
+            <div class="filters_content">
+                <div class="currency-inputs"></div>
+            </div>
+        </div>
+
+        <div class="filters_container">
             <div class="filters_header" onclick="toggleSingleFilter(this)">
                 <span>Континент</span>
                 <img src="public/icons/chevron.svg" class="filters_chevron-icon" alt="continent-icon"/>
             </div>
             <div class="filters_content">
-                <div class="continent-inputs">
-                    <label><input type="checkbox"> Евразия</label>
-                    <label><input type="checkbox"> Африка</label>
-                    <label><input type="checkbox"> Северная Америка</label>
-                    <label><input type="checkbox"> Южная Америка</label>
-                    <label><input type="checkbox"> Австралия</label>
-                    <label><input type="checkbox"> Антарктида</label>
-                </div>
+                <div class="continent-inputs"></div>
             </div>
         </div>
 
-        <div class="filters_container active">
+        <div class="filters_container">
             <div class="filters_header" onclick="toggleSingleFilter(this)">
                 <span>Языки</span>
                 <img src="public/icons/chevron.svg" class="filters_chevron-icon" alt="language-icon"/>
             </div>
             <div class="filters_content">
-                <div class="language-inputs">
-                    <label><input type="checkbox" data-language="russian"> Русский</label>
-                    <label><input type="checkbox" data-language="english"> Английский</label>
-                    <label><input type="checkbox" data-language="french"> Французский</label>
-                    <label><input type="checkbox" data-language="german"> Немецкий</label>
-                </div>
+                <div class="language-inputs"></div>
+            </div>
+        </div>
+
+        <div class="filters_container">
+            <div class="filters_header" onclick="toggleSingleFilter(this)">
+                <span>Членство в ООН</span>
+                <label class="switch">
+                    <input type="checkbox" class="unmember-checkbox">
+                    <span class="slider round"></span>
+                </label>
             </div>
         </div>
 
         <div class="filters_container active">
             <div class="filters_header" onclick="toggleSingleFilter(this)">
-                <span>Членство в ООН</span>
+                <span>Независимость</span>
                 <label class="switch">
-                    <input type="checkbox">
+                    <input type="checkbox" class="independent-checkbox">
                     <span class="slider round"></span>
                 </label>
             </div>
@@ -100,11 +111,12 @@
             <div class="filters_header" onclick="toggleSingleFilter(this)">
                 <span>Выход к морю</span>
                 <label class="switch">
-                    <input type="checkbox">
+                    <input type="checkbox" class="landlocked-checkbox">
                     <span class="slider round"></span>
                 </label>
             </div>
         </div>
+
         </div>
     </aside>
 

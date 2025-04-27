@@ -1,20 +1,48 @@
-const filterState = {
+const appliedFiltersState = {
     name: '',
     languages: [],
-    regions: []
+    regions: [],
+    continents: [],
+    currencies: [],
+    timezones: [],
+    population: null,
+    areaFrom: null,
+    areaTo: null,
+    unMember: null,
+    independent: null,
+    landlocked: null
 }
+
+let filtersFromBackend = []
 
 let currentCountries = []
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const response = await fetch('https://country-search-seven-gilt.vercel.app/api/countries')
+const BASE_URL = 'https://country-search-seven-gilt.vercel.app'
 
-    currentCountries = await response.json();
+document.addEventListener('DOMContentLoaded', async () => {
+    const countries = await fetch(`${BASE_URL}/api/countries`)
+    const filters = await fetch(`${BASE_URL}/api/filters`)
+
+    currentCountries = await countries.json();
+    filtersFromBackend = await filters.json();
+
     renderCountries()
+    loadAvailableFilters(filtersFromBackend)
+
+    setupAreaFilter()
+    setupNameFilter()
+    setupPopulationFilter()
 
     setupNameFilter()
     setupRegionFilter()
     setupLanguageFilter()
+    setupContinentsFilter()
+    setupTimezoneFilter()
+    setupCurrencyFilter()
+
+    setupSingleCheckboxFilter(".unmember-checkbox", "unMember");
+    setupSingleCheckboxFilter(".landlocked-checkbox", "landlocked");
+    setupSingleCheckboxFilter(".independent-checkbox", "independent");
 })
 
 function renderCountries() {
@@ -45,69 +73,94 @@ function renderCountries() {
     })
 }
 
+// функция, которая формирует url запроса с помощью queryParameters
+function buildQueryUrl(baseUrl, filters) {
+    const url = new URL(baseUrl)
+console.log({filters})
+    if (filters.name) url.searchParams.set('name', filters.name)
+    if (filters.areaFrom) url.searchParams.set('areaFrom', filters.areaFrom)
+    if (filters.areaTo) url.searchParams.set('areaTo', filters.areaTo)
+    if (filters.population) url.searchParams.set('population', filters.population)
+
+    if (filters.regions.length) url.searchParams.set('regions', filters.regions.join())
+    if (filters.languages.length) url.searchParams.set('languages', filters.languages.join())
+    if (filters.timezones.length) url.searchParams.set('timezones', filters.timezones.join())
+    if (filters.continents.length) url.searchParams.set('continents', filters.continents.join())
+    if (filters.currencies.length) url.searchParams.set('currencies', filters.currencies.join())
+
+    if (filters.unMember !== null) url.searchParams.set('unMember', filters.unMember.join())
+    if (filters.landlocked !== null) url.searchParams.set('landlocked', filters.landlocked.join())
+    if (filters.independent !== null) url.searchParams.set('independent', filters.independent.join())
+
+    return url.toString()
+}
+
+function loadAvailableFilters(filtersFromBack) {
+    const filtersParameters = [
+        {
+            containerSelector: '.region-inputs',
+            valuesObj: filtersFromBack.regions.values,
+            dataAttr: 'region'
+        },
+        {
+            containerSelector: '.language-inputs',
+            valuesObj: filtersFromBack.languages.values,
+            dataAttr: 'lang'
+        },
+        {
+            containerSelector: '.currency-inputs',
+            valuesObj: filtersFromBack.currencies.values,
+            dataAttr: 'currency'
+        },
+        {
+            containerSelector: '.timezone-inputs',
+            valuesObj: filtersFromBack.timezones.values,
+            dataAttr: 'timezone'
+        },
+        {
+            containerSelector: '.continent-inputs',
+            valuesObj: filtersFromBack.continents.values,
+            dataAttr: 'continent'
+        },
+        {
+            containerSelector: '.continent-inputs',
+            valuesObj: filtersFromBack.continents.values,
+            dataAttr: 'continent'
+        }
+    ]
+
+    filtersParameters.forEach(param => {
+        renderCheckboxesWithLabels({
+            containerSelector: param.containerSelector,
+            valuesObj: param.valuesObj,
+            dataAttr: param.dataAttr,
+        })
+    })
+}
+
+function renderCheckboxesWithLabels({containerSelector, valuesObj, dataAttr}) {
+    const container  = document.querySelector(containerSelector)
+    if (!container) return;
+
+    const entries = Object.entries(valuesObj);
+
+    container.innerHTML= entries.map(([key, label]) =>
+    `<label class="custom-checkbox">
+        <input type="checkbox" data-${dataAttr}="${key}">${label}</label>
+    </label>`).join('')
+}
+
 async function applyFilters() {
     try {
-        const queries = []
-
-        if (filterState.name) {
-            queries.push(fetch(`https://country-search-seven-gilt.vercel.app/api/countries/search?name=${encodeURIComponent(filterState.name)}`)
-                .then(response => response.ok ? response.json() : ''))
-        }
-
-        for (const region of filterState.regions) {
-            queries.push(fetch(`https://restcountries.com/v3.1/region/${region}`)
-                .then(response => response.ok ? response.json() : []))
-        }
-
-        for (const lang of filterState.languages) {
-            queries.push(fetch(`https://restcountries.com/v3.1/lang/${lang}`)
-                .then(response => response.ok ? response.json() : []))
-        }
-
-        if (queries.length === 0) {
-            const res = await fetch('https://restcountries.com/v3.1/all')
-            currentCountries = res.json()
-            renderCountries()
-        }
-
-        const results = await Promise.all(queries)
-        console.log({results})
-        // передаем массив с массивами
-        currentCountries = intersectCountries(results)
-        console.log(111, {currentCountries})
-
-
+        const url = buildQueryUrl(`${BASE_URL}/api/countries/search`, appliedFiltersState)
+        const res = await fetch(url)
+        const resResult = res.ok ? await res.json() : []
+        currentCountries = resResult.data
         renderCountries()
     } catch (error) {
         console.error('Ошибка при применении фильтров', error)
         renderCountries([])
     }
-}
-
-function intersectCountries(countriesList) {
-    if (!countriesList.length) return []
-
-    const key = (country) => country.cca3 || country.name.common
-
-    const keysOfTreeArrays = countriesList.map(list => {
-        return list.map(key)
-    })
-
-    console.log({ keysOfTreeArrays})
-
-    const firstList = countriesList[0]
-    const result = []
-
-    firstList.forEach(country => {
-        const countryKey = key(country)
-
-        const inAll = keysOfTreeArrays.every(list => list.includes(countryKey))
-        if (inAll) {
-            result.push(country)
-        }
-    })
-
-    return result
 }
 
 function setupNameFilter () {
@@ -118,7 +171,7 @@ function setupNameFilter () {
     input.addEventListener('input', () => {
         clearTimeout(debounceTimer)
         debounceTimer = setTimeout(()=>{
-            filterState.name = input.value.trim()
+            appliedFiltersState.name = input.value.trim()
             applyFilters()
         }, 400)
     })
@@ -129,9 +182,22 @@ function setupRegionFilter () {
 
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', () => {
-            filterState.regions = Array.from(checkboxes)
+            appliedFiltersState.regions = Array.from(checkboxes)
                 .filter(cb => cb.checked)
                 .map( c => c.dataset.region.toLowerCase())
+            applyFilters()
+        })
+    })
+}
+
+function setupContinentsFilter () {
+    const checkboxes = document.querySelectorAll('.continent-inputs input[type="checkbox"]')
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            appliedFiltersState.continents = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map( c => c.dataset.continent.toLowerCase())
             applyFilters()
         })
     })
@@ -142,10 +208,84 @@ function setupLanguageFilter () {
 
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', () => {
-            filterState.languages = Array.from(checkboxes)
+            appliedFiltersState.languages = Array.from(checkboxes)
                 .filter(cb => cb.checked)
-                .map( c => c.dataset.language.toLowerCase())
+                .map( c => c.dataset.lang.toLowerCase())
             applyFilters()
         })
     })
+}
+
+function setupTimezoneFilter () {
+    const checkboxes = document.querySelectorAll('.timezone-inputs input[type="checkbox"]')
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            appliedFiltersState.timezones = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map( c => c.dataset.timezone.toLowerCase())
+            applyFilters()
+        })
+    })
+}
+
+function setupCurrencyFilter () {
+    const checkboxes = document.querySelectorAll('.currency-inputs input[type="checkbox"]')
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            appliedFiltersState.currencies = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map( c => c.dataset.currency.toLowerCase())
+            applyFilters()
+        })
+    })
+}
+
+function setupAreaFilter () {
+    const minInput = document.getElementById('area-min')
+    const maxInput = document.getElementById('area-max')
+    let debounceTimer = null
+
+    const update = () => {
+        appliedFiltersState.areaFrom = minInput.value
+        appliedFiltersState.areaTo = maxInput.value
+        clearTimeout(debounceTimer)
+        debounceTimer = setTimeout(()=>{
+            applyFilters()
+        },400)
+    }
+
+    minInput.addEventListener('input', update)
+    maxInput.addEventListener('input', update)
+}
+
+function setupPopulationFilter () {
+    const slider = document.getElementById("population-slider");
+    const input = document.getElementById("population-input");
+    let debounceTimer = null;
+
+    const update = value => {
+        appliedFiltersState.population = +value;
+        input.value = Number(value).toLocaleString("ru-RU");
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            applyFilters();
+        }, 400);
+    };
+
+    slider.addEventListener("input", e => update(e.target.value));
+    input.addEventListener("input", e => update(e.target.value(/\D/g, ""))); // убирает не цифры
+}
+
+function setupSingleCheckboxFilter(selector, filterKey) {
+    console.log({selector, filterKey});
+
+    const checkbox = document.querySelector(selector);
+    if (!checkbox) return;
+
+    checkbox.addEventListener("change", () => {
+        appliedFiltersState[filterKey] = checkbox.checked ? "true" : null;
+        applyFilters();
+    });
 }

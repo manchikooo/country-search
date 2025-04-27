@@ -1,8 +1,9 @@
 /* Фильтры */
 .filters {
     height: calc(100vh - 92px);
-    width: 375px;
-    overflow: hidden;
+    width: 373px;
+    min-width: 373px;
+    overflow: auto;
     transition: var(--transition);
 
     margin-left: var(--spacing-l);
