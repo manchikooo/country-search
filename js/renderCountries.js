@@ -17,7 +17,7 @@ let filtersFromBackend = []
 
 let currentCountries = [];
 
-const BASE_URL = 'https://country-search-itbali-itbalis-projects.vercel.app'
+const BASE_URL = 'https://country-search-seven-gilt.vercel.app'
 
 document.addEventListener("DOMContentLoaded", async () => {
     // запрашиваем страны и фильтры
