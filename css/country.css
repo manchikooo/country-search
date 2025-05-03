@@ -1,0 +1,90 @@
+.country-mode {
+    flex-direction: column;
+    gap: 130px;
+}
+
+.country-header {
+    display: flex;
+    gap: 76px;
+}
+
+.title {
+    font-weight: 700;
+    font-size: 96px;
+    text-align: start;
+    line-height: 100%;
+}
+
+.subtitle {
+    text-align: left;
+    font-weight: 700;
+    font-size: 48px;
+}
+
+.country-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+.params {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 24px;
+}
+
+.country-param {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 100%;
+
+    .info-key {
+        color: rgba(0, 0, 0, 0.5);
+    }
+}
+
+.country-flag {
+    width: 100%;
+    min-width: 450px;
+}
+
+.information {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+/*СТИЛИ ТАБЛИЦЫ С ПОДРОБНОЙ ИНФОЙ*/
+.table-information {
+    width: 100%;
+    border-spacing: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid #D2D2D2;
+}
+
+.table-information thead {
+    background-color: #EDEDED;
+}
+
+.table-information tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-information td,
+.table-information th {
+    padding: 24px 32px;
+    text-align: left;
+    font-size: 18px;
+    border-bottom: 1px solid #D2D2D2;
+}
+
+.table-information td:first-child,
+.table-information th:first-child{
+    font-weight: 700;
+    color: #000000;
+    width: 390px;
+    border-right: 1px solid #D2D2D2;
+}

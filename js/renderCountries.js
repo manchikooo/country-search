@@ -29,20 +29,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderCountries()
     loadAvailableFilters(filtersFromBackend)
 
-    setupAreaFilter()
-    setupNameFilter()
-    setupPopulationFilter()
+    const setupFilters = [
+        setupAreaFilter,
+        setupRegionFilter,
+        setupNameFilter,
+        setupPopulationFilter,
+        setupLanguageFilter,
+        setupContinentsFilter,
+        setupTimezoneFilter,
+        setupCurrencyFilter
+    ]
 
-    setupNameFilter()
-    setupRegionFilter()
-    setupLanguageFilter()
-    setupContinentsFilter()
-    setupTimezoneFilter()
-    setupCurrencyFilter()
+    setupFilters.forEach(fn => fn());
 
-    setupSingleCheckboxFilter(".unmember-checkbox", "unMember");
-    setupSingleCheckboxFilter(".landlocked-checkbox", "landlocked");
-    setupSingleCheckboxFilter(".independent-checkbox", "independent");
+    [
+        {selector: '.unmember-checkbox', filterKey: 'unMember'},
+        {selector: '.landlocked-checkbox', filterKey: 'landlocked'},
+        {selector: '.independent-checkbox', filterKey: 'independent'}
+    ].forEach(({selector, filterKey}) => {
+        setupSingleCheckboxFilter(selector, filterKey)
+    })
 })
 
 function renderCountries() {
@@ -67,6 +73,7 @@ function renderCountries() {
         <h3>${name}</h3>
         <p>Регион: ${region}</p>
         <p>Столица: ${capital}</p>
+        <a class="navigate-to-detail" href="/country-search/country.html?code=${country.cca3}">Подробнее</a>
         `
 
         container.appendChild(card)
@@ -76,21 +83,27 @@ function renderCountries() {
 // функция, которая формирует url запроса с помощью queryParameters
 function buildQueryUrl(baseUrl, filters) {
     const url = new URL(baseUrl)
-console.log({filters})
-    if (filters.name) url.searchParams.set('name', filters.name)
-    if (filters.areaFrom) url.searchParams.set('areaFrom', filters.areaFrom)
-    if (filters.areaTo) url.searchParams.set('areaTo', filters.areaTo)
-    if (filters.population) url.searchParams.set('population', filters.population)
 
-    if (filters.regions.length) url.searchParams.set('regions', filters.regions.join())
-    if (filters.languages.length) url.searchParams.set('languages', filters.languages.join())
-    if (filters.timezones.length) url.searchParams.set('timezones', filters.timezones.join())
-    if (filters.continents.length) url.searchParams.set('continents', filters.continents.join())
-    if (filters.currencies.length) url.searchParams.set('currencies', filters.currencies.join())
+    const simpleFields = ['name', 'areaFrom', 'areaTo', 'population']
+    const arrayFields = ['regions', 'languages', 'timezones', 'continents', 'currencies']
+    const booleansFields = ['unMember', 'independent']
 
-    if (filters.unMember !== null) url.searchParams.set('unMember', filters.unMember.join())
-    if (filters.landlocked !== null) url.searchParams.set('landlocked', filters.landlocked.join())
-    if (filters.independent !== null) url.searchParams.set('independent', filters.independent.join())
+    simpleFields.forEach(fieldName => {
+        if (filters[fieldName]) url.searchParams.set(fieldName, filters[fieldName])
+    })
+
+    arrayFields.forEach(fieldName => {
+        if (filters[fieldName]?.length) url.searchParams.set(fieldName, filters[fieldName].join(','))
+    })
+
+    booleansFields.forEach(fieldName => {
+        if (filters[fieldName] !== null) url.searchParams.set(fieldName, filters[fieldName])
+    })
+
+    if (filters.landlocked !== null) {
+        const invertedLandlocked = filters.landlocked === 'true' ? 'false' : 'true'
+        url.searchParams.set('landlocked', invertedLandlocked)
+    }
 
     return url.toString()
 }
@@ -152,15 +165,27 @@ function renderCheckboxesWithLabels({containerSelector, valuesObj, dataAttr}) {
 
 async function applyFilters() {
     try {
-        const url = buildQueryUrl(`${BASE_URL}/api/countries/search`, appliedFiltersState)
+        const url = isEmptyFilters(appliedFiltersState)
+        ? `${BASE_URL}/api/countries`
+        : buildQueryUrl(`${BASE_URL}/api/countries/search`, appliedFiltersState)
+
         const res = await fetch(url)
-        const resResult = res.ok ? await res.json() : []
-        currentCountries = resResult.data
+        const json = await res.json()
+
+        currentCountries = json.data || json
         renderCountries()
     } catch (error) {
         console.error('Ошибка при применении фильтров', error)
         renderCountries([])
     }
+}
+
+function isEmptyFilters(filters) {
+    console.log({filters})
+    return Object.values(filters).every(value => {
+        if (Array.isArray(value)) return value.length === 0
+        return value === null || value === ''
+    })
 }
 
 function setupNameFilter () {
@@ -275,12 +300,10 @@ function setupPopulationFilter () {
     };
 
     slider.addEventListener("input", e => update(e.target.value));
-    input.addEventListener("input", e => update(e.target.value(/\D/g, ""))); // убирает не цифры
+    input.addEventListener("input", e => update(e.target.value.replace(/\D/g, ""))); // убирает не цифры
 }
 
 function setupSingleCheckboxFilter(selector, filterKey) {
-    console.log({selector, filterKey});
-
     const checkbox = document.querySelector(selector);
     if (!checkbox) return;
 

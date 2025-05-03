@@ -14,7 +14,7 @@ input {
     }
 }
 
-button {
+button, .navigate-to-detail {
     border-radius: var(--spacing-s);
     border: none;
     padding: var(--spacing-s);
@@ -27,4 +27,10 @@ button {
         background: var(--color-active);
         color: var(--color-bg);
     }
+}
+
+.container {
+    display: flex;
+    max-width: 1536px;
+    margin: 0 auto;
 }

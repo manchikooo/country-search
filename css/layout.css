@@ -1,8 +1,3 @@
-/*  Основной контейнер */
-.container {
-    display: flex;
-}
-
 /* Основной контент */
 .main-content {
     display: flex;
