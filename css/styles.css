@@ -6,6 +6,7 @@
 @import url('range.css');
 @import url('defaults.css');
 @import url('country.css');
+@import url('createModal.css');
 
 :root {
     /* позволяет включить анимацию в хроме для высоты и ширины с авто значениями */

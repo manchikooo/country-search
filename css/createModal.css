@@ -1,0 +1,31 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    min-width: 300px;
+    max-width: 600px;
+}
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+    gap: 16px;
+}
+
+.hidden {
+    display: none;
+}
+
+.cancel-btn {
+    background-color: red;
+    color: white;
+}

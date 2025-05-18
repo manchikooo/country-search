@@ -65,6 +65,7 @@ function renderCountries() {
         const capital = country.capital?.[0] || 'Нет данных'
         const region = country.region || 'Нет региона'
         const flag = country.flags?.png || ''
+        const cca3 = country.cca3;
 
         const card = document.createElement("div")
         card.className = 'card'
@@ -73,8 +74,34 @@ function renderCountries() {
         <h3>${name}</h3>
         <p>Регион: ${region}</p>
         <p>Столица: ${capital}</p>
-        <a class="navigate-to-detail" href="/country-search/country.html?code=${country.cca3}">Подробнее</a>
+        <a class="navigate-to-detail" target="_blank" href="/country-search/country.html?code=${country.cca3}">Подробнее</a>
+        <button class="delete-button" data-code="${cca3}">x</button>
         `
+
+        // Кнопка удаления с запросом (дублирование, да. поправлю позже)
+        card.querySelector('.delete-button').addEventListener('click', async (e) => {
+            const code = e.target.dataset.code;
+            if (!confirm(`Удалить страну с кодом ${code}?`)) return;
+
+            try {
+                const res = await fetch(`https://country-search-seven-gilt.vercel.app/api/countries/${code}`, {
+                    method: 'DELETE'
+                });
+
+                if (!res.ok) throw new Error(`Ошибка удаления: ${res.status}`);
+                alert('Страна удалена');
+
+                // Удаление из DOM
+                card.remove();
+
+                // Удаление из currentCountries
+                currentCountries = currentCountries.filter(c => c.cca3 !== code);
+
+            } catch (err) {
+                console.error(err);
+                alert('Не удалось удалить страну.');
+            }
+        });
 
         container.appendChild(card)
     })

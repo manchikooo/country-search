@@ -123,14 +123,41 @@
     <!-- Карточки стран -->
     <main class="main-content">
         <search>
+            <button class="create-button">Создать страну</button>
             <input type="text" name="titleSearch" id="titleSearch" placeholder="Поиск"/>
         </search>
         <section class="countries-grid">
         </section>
     </main>
 </div>
+
+<div class="modal-overlay hidden" id="modal">
+    <div class="modal">
+        <h2>Создать новую страну</h2>
+        <form id="createCountryForm">
+            <label>
+                Название (common):
+                <input type="text" name="common" required />
+            </label>
+            <label>
+                Официальное название:
+                <input type="text" name="official" required />
+            </label>
+            <label>
+                Код страны (cca3):
+                <input type="text" name="cca3" maxlength="3" required />
+            </label>
+            <div class="modal-buttons">
+                <button type="button" id="cancelModal" class="cancel-btn">Отмена</button>
+                <button type="submit">Создать</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script src="js/slider.js"></script>
 <script src="js/range.js"></script>
 <script src="js/renderCountries.js"></script>
+<script src="js/createCountryModal.js"></script>
 </body>
 </html>

@@ -48,6 +48,10 @@
 .country-flag {
     width: 100%;
     min-width: 450px;
+
+    img {
+        width: 100%
+    };
 }
 
 .information {
@@ -87,4 +91,9 @@
     color: #000000;
     width: 390px;
     border-right: 1px solid #D2D2D2;
+}
+
+.country-control-buttons {
+    display: flex;
+    gap: 16px;
 }

@@ -7,4 +7,13 @@
     flex-grow: 1;
     margin-left: var(--spacing-l);
     margin-right: var(--spacing-l);
+
+    search {
+        display: flex;
+        gap: var(--spacing-s);
+    }
+
+    .create-button {
+        width: 30%;
+    }
 }
